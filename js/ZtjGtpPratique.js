@@ -6598,6 +6598,7 @@ var $author$project$ZtjGrpPratique$init = F2(
 				bienvenueRefInput: $elm$core$Maybe$Nothing,
 				currentDoc: $elm$core$Maybe$Nothing,
 				documents: $elm$core$Dict$empty,
+				fontSize: 18,
 				height: flags.height,
 				levelInput: $elm$core$Maybe$Nothing,
 				markdownInput: $elm$core$Maybe$Nothing,
@@ -7056,6 +7057,10 @@ var $elm$core$Maybe$map = F2(
 var $author$project$Utils$Utils$mbStr = function (s) {
 	return (s === '') ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(s);
 };
+var $elm$core$Basics$min = F2(
+	function (x, y) {
+		return (_Utils_cmp(x, y) < 0) ? x : y;
+	});
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Types$RJTStudent = {$: 'RJTStudent'};
 var $elm$json$Json$Decode$oneOf = _Json_oneOf;
@@ -8247,6 +8252,18 @@ var $author$project$ZtjGrpPratique$update = F2(
 						$elm$core$Task$perform,
 						$author$project$Types$ZGPDocLoaded,
 						$elm$file$File$toString(f)));
+			case 'ZGPChangeFontSize':
+				var n = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							fontSize: A2(
+								$elm$core$Basics$max,
+								14,
+								A2($elm$core$Basics$min, model.fontSize + n, 32))
+						}),
+					$elm$core$Platform$Cmd$none);
 			case 'ZGPDocLoaded':
 				var docStr = msg.a;
 				return _Utils_Tuple2(
@@ -10897,10 +10914,6 @@ var $mdgriffith$elm_ui$Internal$Model$hasSmallCaps = function (typeface) {
 		return false;
 	}
 };
-var $elm$core$Basics$min = F2(
-	function (x, y) {
-		return (_Utils_cmp(x, y) < 0) ? x : y;
-	});
 var $mdgriffith$elm_ui$Internal$Model$renderProps = F3(
 	function (force, _v0, existing) {
 		var key = _v0.a;
@@ -19876,8 +19889,8 @@ var $author$project$Plugins$RichJapText$simpleMarkdownView = function (wd) {
 						wd)))
 			]));
 };
-var $author$project$Plugins$RichJapText$sentenceView = F2(
-	function (index, s) {
+var $author$project$Plugins$RichJapText$sentenceView = F3(
+	function (index, fs, s) {
 		var japanese = s.japanese;
 		var romaji = s.romaji;
 		var french = s.french;
@@ -19907,15 +19920,33 @@ var $author$project$Plugins$RichJapText$sentenceView = F2(
 								switch (_v0.a.$) {
 									case 'RJTOnlyKanji':
 										var _v1 = _v0.a;
-										return $author$project$Plugins$RichJapText$simpleMarkdownView(
-											$author$project$Plugins$RichJapText$hideFurigana(japanese));
+										return A2(
+											$mdgriffith$elm_ui$Element$el,
+											_List_fromArray(
+												[
+													$mdgriffith$elm_ui$Element$Font$size(fs)
+												]),
+											$author$project$Plugins$RichJapText$simpleMarkdownView(
+												$author$project$Plugins$RichJapText$hideFurigana(japanese)));
 									case 'RJTOnlyFurigana':
 										var _v2 = _v0.a;
-										return $author$project$Plugins$RichJapText$simpleMarkdownView(
-											$author$project$Plugins$RichJapText$hideKanji(japanese));
+										return A2(
+											$mdgriffith$elm_ui$Element$el,
+											_List_fromArray(
+												[
+													$mdgriffith$elm_ui$Element$Font$size(fs)
+												]),
+											$author$project$Plugins$RichJapText$simpleMarkdownView(
+												$author$project$Plugins$RichJapText$hideKanji(japanese)));
 									default:
 										var _v3 = _v0.a;
-										return $author$project$Plugins$RichJapText$simpleMarkdownView(japanese);
+										return A2(
+											$mdgriffith$elm_ui$Element$el,
+											_List_fromArray(
+												[
+													$mdgriffith$elm_ui$Element$Font$size(fs)
+												]),
+											$author$project$Plugins$RichJapText$simpleMarkdownView(japanese));
 								}
 							default:
 								return $mdgriffith$elm_ui$Element$none;
@@ -19966,8 +19997,8 @@ var $author$project$ZtjGrpPratique$simpleMarkdownView = function (wd) {
 			]));
 };
 var $elm$html$Html$source = _VirtualDom_node('source');
-var $author$project$ZtjGrpPratique$documentContentView = F3(
-	function (w, itemId, docItem) {
+var $author$project$ZtjGrpPratique$documentContentView = F4(
+	function (w, fs, itemId, docItem) {
 		switch (docItem.$) {
 			case 'ZTJMarkdown':
 				var markdown = docItem.a;
@@ -20030,7 +20061,7 @@ var $author$project$ZtjGrpPratique$documentContentView = F3(
 									$elm$core$List$indexedMap,
 									F2(
 										function (i, v) {
-											return A2($author$project$Plugins$RichJapText$sentenceView, i, v);
+											return A3($author$project$Plugins$RichJapText$sentenceView, i, fs, v);
 										}),
 									rjt.sentences))
 							])));
@@ -20040,8 +20071,8 @@ var $avh4$elm_color$Color$lightBlue = A4($avh4$elm_color$Color$RgbaSpace, 114 / 
 var $author$project$Style$Palette$lightBlue = $author$project$Style$Palette$colorConv($avh4$elm_color$Color$lightBlue);
 var $author$project$Style$Helpers$noAttr = $mdgriffith$elm_ui$Element$htmlAttribute(
 	$elm$html$Html$Attributes$class(''));
-var $author$project$ZtjGrpPratique$documentEditableContentView = F4(
-	function (w, selectedId, itemId, docItem) {
+var $author$project$ZtjGrpPratique$documentEditableContentView = F5(
+	function (w, fs, selectedId, itemId, docItem) {
 		return A2(
 			$mdgriffith$elm_ui$Element$row,
 			_List_fromArray(
@@ -20098,7 +20129,7 @@ var $author$project$ZtjGrpPratique$documentEditableContentView = F4(
 									$author$project$Types$ZGPRemoveItem(itemId))
 							})
 						])),
-					A3($author$project$ZtjGrpPratique$documentContentView, w, itemId, docItem)
+					A4($author$project$ZtjGrpPratique$documentContentView, w, fs, itemId, docItem)
 				]));
 	});
 var $author$project$ZtjGrpPratique$editableDocView = F3(
@@ -20119,7 +20150,7 @@ var $author$project$ZtjGrpPratique$editableDocView = F3(
 				$elm$core$Dict$toList(
 					A2(
 						$elm$core$Dict$map,
-						A2($author$project$ZtjGrpPratique$documentEditableContentView, w, selectedId),
+						A3($author$project$ZtjGrpPratique$documentEditableContentView, w, 18, selectedId),
 						contents))));
 	});
 var $truqu$elm_base64$Base64$Encode$intToBase64 = function (i) {
@@ -21062,9 +21093,84 @@ var $mdgriffith$elm_ui$Element$Input$multiline = F2(
 			attrs,
 			{label: multi.label, onChange: multi.onChange, placeholder: multi.placeholder, text: multi.text});
 	});
+var $author$project$Types$ZGPChangeFontSize = function (a) {
+	return {$: 'ZGPChangeFontSize', a: a};
+};
 var $author$project$Types$ZJTSelectDoc = function (a) {
 	return {$: 'ZJTSelectDoc', a: a};
 };
+var $mdgriffith$elm_ui$Internal$Model$FontFamily = F2(
+	function (a, b) {
+		return {$: 'FontFamily', a: a, b: b};
+	});
+var $mdgriffith$elm_ui$Internal$Flag$fontFamily = $mdgriffith$elm_ui$Internal$Flag$flag(5);
+var $mdgriffith$elm_ui$Internal$Model$renderFontClassName = F2(
+	function (font, current) {
+		return _Utils_ap(
+			current,
+			function () {
+				switch (font.$) {
+					case 'Serif':
+						return 'serif';
+					case 'SansSerif':
+						return 'sans-serif';
+					case 'Monospace':
+						return 'monospace';
+					case 'Typeface':
+						var name = font.a;
+						return A2(
+							$elm$core$String$join,
+							'-',
+							$elm$core$String$words(
+								$elm$core$String$toLower(name)));
+					case 'ImportFont':
+						var name = font.a;
+						var url = font.b;
+						return A2(
+							$elm$core$String$join,
+							'-',
+							$elm$core$String$words(
+								$elm$core$String$toLower(name)));
+					default:
+						var name = font.a.name;
+						return A2(
+							$elm$core$String$join,
+							'-',
+							$elm$core$String$words(
+								$elm$core$String$toLower(name)));
+				}
+			}());
+	});
+var $mdgriffith$elm_ui$Element$Font$family = function (families) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$fontFamily,
+		A2(
+			$mdgriffith$elm_ui$Internal$Model$FontFamily,
+			A3($elm$core$List$foldl, $mdgriffith$elm_ui$Internal$Model$renderFontClassName, 'ff-', families),
+			families));
+};
+var $author$project$ZtjGrpPratique$japaneseVisible = function (doc) {
+	var itemInJapanese = function (i) {
+		if (i.$ === 'ZTJRichJapText') {
+			var sentences = i.a.sentences;
+			return A2(
+				$elm$core$List$any,
+				function (s) {
+					return (!_Utils_eq(s.display, $author$project$Types$RJTRomaji)) && (!_Utils_eq(s.display, $author$project$Types$RJTFrench));
+				},
+				sentences);
+		} else {
+			return false;
+		}
+	};
+	return A2(
+		$elm$core$List$any,
+		itemInJapanese,
+		$elm$core$Dict$values(doc.contents));
+};
+var $mdgriffith$elm_ui$Internal$Model$Monospace = {$: 'Monospace'};
+var $mdgriffith$elm_ui$Element$Font$monospace = $mdgriffith$elm_ui$Internal$Model$Monospace;
 var $elm$html$Html$option = _VirtualDom_node('option');
 var $elm$html$Html$select = _VirtualDom_node('select');
 var $author$project$ZtjGrpPratique$select = F2(
@@ -21105,24 +21211,286 @@ var $author$project$ZtjGrpPratique$select = F2(
 						]),
 					A2($elm$core$List$map, toOption, options))));
 	});
+var $mdgriffith$elm_ui$Internal$Flag$fontWeight = $mdgriffith$elm_ui$Internal$Flag$flag(13);
+var $mdgriffith$elm_ui$Element$Font$semiBold = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.textSemiBold);
+var $mdgriffith$elm_ui$Internal$Model$Padding = F5(
+	function (a, b, c, d, e) {
+		return {$: 'Padding', a: a, b: b, c: c, d: d, e: e};
+	});
+var $mdgriffith$elm_ui$Internal$Model$Spaced = F3(
+	function (a, b, c) {
+		return {$: 'Spaced', a: a, b: b, c: c};
+	});
+var $mdgriffith$elm_ui$Internal$Model$extractSpacingAndPadding = function (attrs) {
+	return A3(
+		$elm$core$List$foldr,
+		F2(
+			function (attr, _v0) {
+				var pad = _v0.a;
+				var spacing = _v0.b;
+				return _Utils_Tuple2(
+					function () {
+						if (pad.$ === 'Just') {
+							var x = pad.a;
+							return pad;
+						} else {
+							if ((attr.$ === 'StyleClass') && (attr.b.$ === 'PaddingStyle')) {
+								var _v3 = attr.b;
+								var name = _v3.a;
+								var t = _v3.b;
+								var r = _v3.c;
+								var b = _v3.d;
+								var l = _v3.e;
+								return $elm$core$Maybe$Just(
+									A5($mdgriffith$elm_ui$Internal$Model$Padding, name, t, r, b, l));
+							} else {
+								return $elm$core$Maybe$Nothing;
+							}
+						}
+					}(),
+					function () {
+						if (spacing.$ === 'Just') {
+							var x = spacing.a;
+							return spacing;
+						} else {
+							if ((attr.$ === 'StyleClass') && (attr.b.$ === 'SpacingStyle')) {
+								var _v6 = attr.b;
+								var name = _v6.a;
+								var x = _v6.b;
+								var y = _v6.c;
+								return $elm$core$Maybe$Just(
+									A3($mdgriffith$elm_ui$Internal$Model$Spaced, name, x, y));
+							} else {
+								return $elm$core$Maybe$Nothing;
+							}
+						}
+					}());
+			}),
+		_Utils_Tuple2($elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing),
+		attrs);
+};
+var $mdgriffith$elm_ui$Element$wrappedRow = F2(
+	function (attrs, children) {
+		var _v0 = $mdgriffith$elm_ui$Internal$Model$extractSpacingAndPadding(attrs);
+		var padded = _v0.a;
+		var spaced = _v0.b;
+		if (spaced.$ === 'Nothing') {
+			return A4(
+				$mdgriffith$elm_ui$Internal$Model$element,
+				$mdgriffith$elm_ui$Internal$Model$asRow,
+				$mdgriffith$elm_ui$Internal$Model$div,
+				A2(
+					$elm$core$List$cons,
+					$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.contentLeft + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.contentCenterY + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.wrapped)))),
+					A2(
+						$elm$core$List$cons,
+						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$shrink),
+						A2(
+							$elm$core$List$cons,
+							$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$shrink),
+							attrs))),
+				$mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
+		} else {
+			var _v2 = spaced.a;
+			var spaceName = _v2.a;
+			var x = _v2.b;
+			var y = _v2.c;
+			var newPadding = function () {
+				if (padded.$ === 'Just') {
+					var _v5 = padded.a;
+					var name = _v5.a;
+					var t = _v5.b;
+					var r = _v5.c;
+					var b = _v5.d;
+					var l = _v5.e;
+					if ((_Utils_cmp(r, x / 2) > -1) && (_Utils_cmp(b, y / 2) > -1)) {
+						var newTop = t - (y / 2);
+						var newRight = r - (x / 2);
+						var newLeft = l - (x / 2);
+						var newBottom = b - (y / 2);
+						return $elm$core$Maybe$Just(
+							A2(
+								$mdgriffith$elm_ui$Internal$Model$StyleClass,
+								$mdgriffith$elm_ui$Internal$Flag$padding,
+								A5(
+									$mdgriffith$elm_ui$Internal$Model$PaddingStyle,
+									A4($mdgriffith$elm_ui$Internal$Model$paddingNameFloat, newTop, newRight, newBottom, newLeft),
+									newTop,
+									newRight,
+									newBottom,
+									newLeft)));
+					} else {
+						return $elm$core$Maybe$Nothing;
+					}
+				} else {
+					return $elm$core$Maybe$Nothing;
+				}
+			}();
+			if (newPadding.$ === 'Just') {
+				var pad = newPadding.a;
+				return A4(
+					$mdgriffith$elm_ui$Internal$Model$element,
+					$mdgriffith$elm_ui$Internal$Model$asRow,
+					$mdgriffith$elm_ui$Internal$Model$div,
+					A2(
+						$elm$core$List$cons,
+						$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.contentLeft + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.contentCenterY + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.wrapped)))),
+						A2(
+							$elm$core$List$cons,
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$shrink),
+							A2(
+								$elm$core$List$cons,
+								$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$shrink),
+								_Utils_ap(
+									attrs,
+									_List_fromArray(
+										[pad]))))),
+					$mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
+			} else {
+				var halfY = -(y / 2);
+				var halfX = -(x / 2);
+				return A4(
+					$mdgriffith$elm_ui$Internal$Model$element,
+					$mdgriffith$elm_ui$Internal$Model$asEl,
+					$mdgriffith$elm_ui$Internal$Model$div,
+					attrs,
+					$mdgriffith$elm_ui$Internal$Model$Unkeyed(
+						_List_fromArray(
+							[
+								A4(
+								$mdgriffith$elm_ui$Internal$Model$element,
+								$mdgriffith$elm_ui$Internal$Model$asRow,
+								$mdgriffith$elm_ui$Internal$Model$div,
+								A2(
+									$elm$core$List$cons,
+									$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.contentLeft + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.contentCenterY + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.wrapped)))),
+									A2(
+										$elm$core$List$cons,
+										$mdgriffith$elm_ui$Internal$Model$Attr(
+											A2(
+												$elm$html$Html$Attributes$style,
+												'margin',
+												$elm$core$String$fromFloat(halfY) + ('px' + (' ' + ($elm$core$String$fromFloat(halfX) + 'px'))))),
+										A2(
+											$elm$core$List$cons,
+											$mdgriffith$elm_ui$Internal$Model$Attr(
+												A2(
+													$elm$html$Html$Attributes$style,
+													'width',
+													'calc(100% + ' + ($elm$core$String$fromInt(x) + 'px)'))),
+											A2(
+												$elm$core$List$cons,
+												$mdgriffith$elm_ui$Internal$Model$Attr(
+													A2(
+														$elm$html$Html$Attributes$style,
+														'height',
+														'calc(100% + ' + ($elm$core$String$fromInt(y) + 'px)'))),
+												A2(
+													$elm$core$List$cons,
+													A2(
+														$mdgriffith$elm_ui$Internal$Model$StyleClass,
+														$mdgriffith$elm_ui$Internal$Flag$spacing,
+														A3($mdgriffith$elm_ui$Internal$Model$SpacingStyle, spaceName, x, y)),
+													_List_Nil))))),
+								$mdgriffith$elm_ui$Internal$Model$Unkeyed(children))
+							])));
+			}
+		}
+	});
 var $author$project$ZtjGrpPratique$selectionView = function (model) {
 	return A2(
-		$mdgriffith$elm_ui$Element$column,
-		_List_Nil,
+		$mdgriffith$elm_ui$Element$wrappedRow,
+		_List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$spacing(20)
+			]),
 		_List_fromArray(
 			[
 				A2(
-				$author$project$ZtjGrpPratique$select,
+				$mdgriffith$elm_ui$Element$column,
 				_List_Nil,
-				{
-					fromString: $elm$core$Basics$identity,
-					handler: $author$project$Types$ZJTSelectDoc,
-					options: A2(
-						$elm$core$List$cons,
-						'--',
-						$elm$core$Dict$keys(model.documents)),
-					toString: $elm$core$Basics$identity
-				})
+				_List_fromArray(
+					[
+						A2(
+						$author$project$ZtjGrpPratique$select,
+						_List_Nil,
+						{
+							fromString: $elm$core$Basics$identity,
+							handler: $author$project$Types$ZJTSelectDoc,
+							options: A2(
+								$elm$core$List$cons,
+								'--',
+								$elm$core$Dict$keys(model.documents)),
+							toString: $elm$core$Basics$identity
+						})
+					])),
+				function () {
+				var _v0 = model.currentDoc;
+				if (_v0.$ === 'Nothing') {
+					return $mdgriffith$elm_ui$Element$none;
+				} else {
+					var d = _v0.a;
+					return $author$project$ZtjGrpPratique$japaneseVisible(d) ? A2(
+						$mdgriffith$elm_ui$Element$row,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$spacing(5)
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$mdgriffith$elm_ui$Element$el,
+								_List_Nil,
+								$mdgriffith$elm_ui$Element$text('Taille police : ')),
+								A2(
+								$mdgriffith$elm_ui$Element$Input$button,
+								_Utils_ap(
+									$author$project$Style$Helpers$buttonStyle_(true),
+									_List_fromArray(
+										[
+											A2($mdgriffith$elm_ui$Element$paddingXY, 7, 5)
+										])),
+								{
+									label: A2(
+										$mdgriffith$elm_ui$Element$el,
+										_List_fromArray(
+											[
+												$mdgriffith$elm_ui$Element$Font$size(15),
+												$mdgriffith$elm_ui$Element$Font$family(
+												_List_fromArray(
+													[$mdgriffith$elm_ui$Element$Font$monospace])),
+												$mdgriffith$elm_ui$Element$Font$semiBold
+											]),
+										$mdgriffith$elm_ui$Element$text('-')),
+									onPress: $elm$core$Maybe$Just(
+										$author$project$Types$ZGPChangeFontSize(-1))
+								}),
+								A2(
+								$mdgriffith$elm_ui$Element$Input$button,
+								_Utils_ap(
+									$author$project$Style$Helpers$buttonStyle_(true),
+									_List_fromArray(
+										[
+											A2($mdgriffith$elm_ui$Element$paddingXY, 7, 5)
+										])),
+								{
+									label: A2(
+										$mdgriffith$elm_ui$Element$el,
+										_List_fromArray(
+											[
+												$mdgriffith$elm_ui$Element$Font$size(15),
+												$mdgriffith$elm_ui$Element$Font$family(
+												_List_fromArray(
+													[$mdgriffith$elm_ui$Element$Font$monospace])),
+												$mdgriffith$elm_ui$Element$Font$semiBold
+											]),
+										$mdgriffith$elm_ui$Element$text('+')),
+									onPress: $elm$core$Maybe$Just(
+										$author$project$Types$ZGPChangeFontSize(1))
+								})
+							])) : $mdgriffith$elm_ui$Element$none;
+				}
+			}()
 			]));
 };
 var $mdgriffith$elm_ui$Element$Input$TextInputNode = function (a) {
@@ -21557,52 +21925,10 @@ var $mdgriffith$elm_ui$Internal$Model$renderRoot = F3(
 					_List_fromArray(
 						[child]))));
 	});
-var $mdgriffith$elm_ui$Internal$Model$FontFamily = F2(
-	function (a, b) {
-		return {$: 'FontFamily', a: a, b: b};
-	});
 var $mdgriffith$elm_ui$Internal$Model$SansSerif = {$: 'SansSerif'};
 var $mdgriffith$elm_ui$Internal$Model$Typeface = function (a) {
 	return {$: 'Typeface', a: a};
 };
-var $mdgriffith$elm_ui$Internal$Flag$fontFamily = $mdgriffith$elm_ui$Internal$Flag$flag(5);
-var $mdgriffith$elm_ui$Internal$Model$renderFontClassName = F2(
-	function (font, current) {
-		return _Utils_ap(
-			current,
-			function () {
-				switch (font.$) {
-					case 'Serif':
-						return 'serif';
-					case 'SansSerif':
-						return 'sans-serif';
-					case 'Monospace':
-						return 'monospace';
-					case 'Typeface':
-						var name = font.a;
-						return A2(
-							$elm$core$String$join,
-							'-',
-							$elm$core$String$words(
-								$elm$core$String$toLower(name)));
-					case 'ImportFont':
-						var name = font.a;
-						var url = font.b;
-						return A2(
-							$elm$core$String$join,
-							'-',
-							$elm$core$String$words(
-								$elm$core$String$toLower(name)));
-					default:
-						var name = font.a.name;
-						return A2(
-							$elm$core$String$join,
-							'-',
-							$elm$core$String$words(
-								$elm$core$String$toLower(name)));
-				}
-			}());
-	});
 var $mdgriffith$elm_ui$Internal$Model$rootStyle = function () {
 	var families = _List_fromArray(
 		[
@@ -21755,8 +22081,8 @@ var $author$project$ZtjGrpPratique$uniqueItemKey = function (_v0) {
 		index,
 		item);
 };
-var $author$project$ZtjGrpPratique$documentView = F2(
-	function (w, _v0) {
+var $author$project$ZtjGrpPratique$documentView = F3(
+	function (w, fs, _v0) {
 		var level = _v0.level;
 		var contents = _v0.contents;
 		var p = (w < 1000) ? 10 : 0;
@@ -21777,7 +22103,7 @@ var $author$project$ZtjGrpPratique$documentView = F2(
 					var item = _v1.c;
 					return _Utils_Tuple2(
 						hash,
-						A3($author$project$ZtjGrpPratique$documentContentView, w - (2 * p), index, item));
+						A4($author$project$ZtjGrpPratique$documentContentView, w - (2 * p), fs, index, item));
 				},
 				A2(
 					$elm$core$List$map,
@@ -21801,11 +22127,13 @@ var $author$project$ZtjGrpPratique$studentView = function (model) {
 				$mdgriffith$elm_ui$Element$none,
 				A2(
 					$elm$core$Maybe$map,
-					$author$project$ZtjGrpPratique$documentView(
+					A2(
+						$author$project$ZtjGrpPratique$documentView,
 						A2(
 							$elm$core$Basics$max,
 							300,
-							A2($elm$core$Basics$min, 800, model.width))),
+							A2($elm$core$Basics$min, 800, model.width)),
+						model.fontSize),
 					model.currentDoc))
 			]));
 };
