@@ -21663,13 +21663,105 @@ var $mdgriffith$elm_ui$Element$layoutWith = F3(
 	});
 var $mdgriffith$elm_ui$Element$layout = $mdgriffith$elm_ui$Element$layoutWith(
 	{options: _List_Nil});
+var $robinheghan$murmur3$Murmur3$HashData = F4(
+	function (shift, seed, hash, charsProcessed) {
+		return {charsProcessed: charsProcessed, hash: hash, seed: seed, shift: shift};
+	});
+var $robinheghan$murmur3$Murmur3$c1 = 3432918353;
+var $robinheghan$murmur3$Murmur3$c2 = 461845907;
+var $robinheghan$murmur3$Murmur3$multiplyBy = F2(
+	function (b, a) {
+		return ((a & 65535) * b) + ((((a >>> 16) * b) & 65535) << 16);
+	});
+var $robinheghan$murmur3$Murmur3$rotlBy = F2(
+	function (b, a) {
+		return (a << b) | (a >>> (32 - b));
+	});
+var $elm$core$Bitwise$xor = _Bitwise_xor;
+var $robinheghan$murmur3$Murmur3$finalize = function (data) {
+	var acc = (!(!data.hash)) ? (data.seed ^ A2(
+		$robinheghan$murmur3$Murmur3$multiplyBy,
+		$robinheghan$murmur3$Murmur3$c2,
+		A2(
+			$robinheghan$murmur3$Murmur3$rotlBy,
+			15,
+			A2($robinheghan$murmur3$Murmur3$multiplyBy, $robinheghan$murmur3$Murmur3$c1, data.hash)))) : data.seed;
+	var h0 = acc ^ data.charsProcessed;
+	var h1 = A2($robinheghan$murmur3$Murmur3$multiplyBy, 2246822507, h0 ^ (h0 >>> 16));
+	var h2 = A2($robinheghan$murmur3$Murmur3$multiplyBy, 3266489909, h1 ^ (h1 >>> 13));
+	return (h2 ^ (h2 >>> 16)) >>> 0;
+};
+var $robinheghan$murmur3$Murmur3$mix = F2(
+	function (h1, k1) {
+		return A2(
+			$robinheghan$murmur3$Murmur3$multiplyBy,
+			5,
+			A2(
+				$robinheghan$murmur3$Murmur3$rotlBy,
+				13,
+				h1 ^ A2(
+					$robinheghan$murmur3$Murmur3$multiplyBy,
+					$robinheghan$murmur3$Murmur3$c2,
+					A2(
+						$robinheghan$murmur3$Murmur3$rotlBy,
+						15,
+						A2($robinheghan$murmur3$Murmur3$multiplyBy, $robinheghan$murmur3$Murmur3$c1, k1))))) + 3864292196;
+	});
+var $robinheghan$murmur3$Murmur3$hashFold = F2(
+	function (c, data) {
+		var res = data.hash | ((255 & $elm$core$Char$toCode(c)) << data.shift);
+		var _v0 = data.shift;
+		if (_v0 === 24) {
+			return {
+				charsProcessed: data.charsProcessed + 1,
+				hash: 0,
+				seed: A2($robinheghan$murmur3$Murmur3$mix, data.seed, res),
+				shift: 0
+			};
+		} else {
+			return {charsProcessed: data.charsProcessed + 1, hash: res, seed: data.seed, shift: data.shift + 8};
+		}
+	});
+var $robinheghan$murmur3$Murmur3$hashString = F2(
+	function (seed, str) {
+		return $robinheghan$murmur3$Murmur3$finalize(
+			A3(
+				$elm$core$String$foldl,
+				$robinheghan$murmur3$Murmur3$hashFold,
+				A4($robinheghan$murmur3$Murmur3$HashData, 0, seed, 0, 0),
+				str));
+	});
+var $author$project$ZtjGrpPratique$uniqueItemKey = function (_v0) {
+	var index = _v0.a;
+	var item = _v0.b;
+	return _Utils_Tuple3(
+		$elm$core$String$fromInt(
+			function () {
+				switch (item.$) {
+					case 'ZTJMarkdown':
+						var markdown = item.a;
+						return A2($robinheghan$murmur3$Murmur3$hashString, index, markdown);
+					case 'ZGPAudio':
+						var url = item.a;
+						return A2($robinheghan$murmur3$Murmur3$hashString, index, url);
+					default:
+						var rjt = item.a;
+						return A2(
+							$robinheghan$murmur3$Murmur3$hashString,
+							index,
+							A3($miniBill$elm_codec$Codec$encodeToString, 0, $author$project$ZtjGrpPratique$ztjRichJapTextCodec, rjt));
+				}
+			}()),
+		index,
+		item);
+};
 var $author$project$ZtjGrpPratique$documentView = F2(
 	function (w, _v0) {
 		var level = _v0.level;
 		var contents = _v0.contents;
 		var p = (w < 1000) ? 10 : 0;
 		return A2(
-			$mdgriffith$elm_ui$Element$column,
+			$mdgriffith$elm_ui$Element$Keyed$column,
 			_List_fromArray(
 				[
 					$mdgriffith$elm_ui$Element$spacing(10),
@@ -21677,11 +21769,20 @@ var $author$project$ZtjGrpPratique$documentView = F2(
 					$mdgriffith$elm_ui$Element$width(
 					$mdgriffith$elm_ui$Element$px(w - (2 * p)))
 				]),
-			$elm$core$Dict$values(
+			A2(
+				$elm$core$List$map,
+				function (_v1) {
+					var hash = _v1.a;
+					var index = _v1.b;
+					var item = _v1.c;
+					return _Utils_Tuple2(
+						hash,
+						A3($author$project$ZtjGrpPratique$documentContentView, w - (2 * p), index, item));
+				},
 				A2(
-					$elm$core$Dict$map,
-					$author$project$ZtjGrpPratique$documentContentView(w - (2 * p)),
-					contents)));
+					$elm$core$List$map,
+					$author$project$ZtjGrpPratique$uniqueItemKey,
+					$elm$core$Dict$toList(contents))));
 	});
 var $author$project$ZtjGrpPratique$studentView = function (model) {
 	return A2(
