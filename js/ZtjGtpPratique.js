@@ -21667,18 +21667,20 @@ var $author$project$ZtjGrpPratique$documentView = F2(
 	function (w, _v0) {
 		var level = _v0.level;
 		var contents = _v0.contents;
+		var p = (w < 1000) ? 10 : 0;
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
 				[
 					$mdgriffith$elm_ui$Element$spacing(10),
+					A2($mdgriffith$elm_ui$Element$paddingXY, p, 0),
 					$mdgriffith$elm_ui$Element$width(
-					$mdgriffith$elm_ui$Element$px(w))
+					$mdgriffith$elm_ui$Element$px(w - (2 * p)))
 				]),
 			$elm$core$Dict$values(
 				A2(
 					$elm$core$Dict$map,
-					$author$project$ZtjGrpPratique$documentContentView(w),
+					$author$project$ZtjGrpPratique$documentContentView(w - (2 * p)),
 					contents)));
 	});
 var $author$project$ZtjGrpPratique$studentView = function (model) {
@@ -21701,7 +21703,7 @@ var $author$project$ZtjGrpPratique$studentView = function (model) {
 					$author$project$ZtjGrpPratique$documentView(
 						A2(
 							$elm$core$Basics$max,
-							400,
+							300,
 							A2($elm$core$Basics$min, 800, model.width))),
 					model.currentDoc))
 			]));
