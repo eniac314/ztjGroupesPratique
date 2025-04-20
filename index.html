@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZeroToJapan - groupes de pratique</title>
+</head>
+<body>
+    <!-- The div where the Elm app will be embedded -->
+    <div id="elm-root"></div>
+
+    <!-- Elm compiled JavaScript -->
+    <script src="js/ZtjGtpPratique.js"></script>
+
+    <script>
+        // Flags data to be passed to the Elm app
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+
+        var flags = {
+            width: width,
+            height: height,
+            mode: "student"
+        };
+
+        // Initialize the Elm app with flags
+        var app = Elm.ZtjGrpPratique.init({
+            node: document.getElementById('elm-root'),
+            flags: flags
+        });
+    </script>
+</body>
+</html>

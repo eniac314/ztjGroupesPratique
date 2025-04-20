@@ -1,0 +1,45 @@
+{
+  "level": 0,
+  "tags": [],
+  "title": "Dialogue - Animaux de compagnie",
+  "bienvenueRef": [],
+  "contents": {
+    "0": {
+      "tag": "ZTJMarkdown",
+      "args": ["### <u>Consigne : Dialogue classique</u>\n\n1. **Écoutez l’audio ci-dessous en lisant le texte en même temps**\n\n2. **Pratiquez ce dialogue une première fois en allant doucement et en articulant chaque mot. À tour de rôle, vous serez :**\n\n   - **Interlocuteur 1 : Anna**\n   - **Interlocuteur 2 : Akari**\n   - **Interlocuteur 3 : Louis & Observateur** : faites vos retours sur la prononciation des mots et ce que vous en avez pensé (soyez cléments !)\n\n3. **Pratiquez ce dialogue une deuxième fois (voir troisième).**\n\n   *La première fois vous a permis de vous familiariser avec les phrases et de les entendre.  \n   Cette fois-ci, parlez plus vite et plus librement.*\n\n   *Si vous voulez vraiment vous sentir à l’aise et progresser, je vous conseille de le faire jusqu’à ce que vous vous sentiez parfaitement naturels.*\n\n4. **Décortiquez le texte mot à mot en vous aidant du vocabulaire**"]},
+    "1": {
+      "tag": "ZGPAudio",
+      "args": [
+        "animaux.mp4"
+      ]
+    },
+    "2": {
+      "tag": "ZTJRichJapText",
+      "args": [
+        {
+          "sentences": [{"japanese":"**アンナ**：あかりちゃん、**<ruby>動物<rt>どうぶつ</rt></ruby>**　<ruby>好<rt>す</rt></ruby>き？","romaji":"**anna**： akari chan, **dōbutsu** suki ?","french":"Anna : Akari tu aimes les animaux ?","showFrench":false,"display":{"tag":"Japanese","args":[{"tag":"OnlyFurigana","args":[]}]}},{"japanese":"**あかり**：うん、**<ruby>大好<rt>だいす</rt></ruby>き**　だよ。アンナちゃんは？","romaji":"**akari**： un, **daisuki** da yo. anna chan wa ?","french":"Akari : Oui je les adore et toi Anna ?","showFrench":false,"display":{"tag":"Japanese","args":[{"tag":"OnlyFurigana","args":[]}]}},{"japanese":"**アンナ**：うん、<ruby>猫<rt>ねこ</rt></ruby>と<ruby>犬<rt>いぬ</rt></ruby>を　<ruby>飼<rt>か</rt></ruby>ってるの。","romaji":"**anna**： un, neko to inu wo katteru no.","french":"Anna : Oui, j’ai un chat et un chien","showFrench":false,"display":{"tag":"Japanese","args":[{"tag":"OnlyFurigana","args":[]}]}},{"japanese":"**ルイ**：ええ〜！　**そんなに**？","romaji":"**rui**： ē〜! **sonna ni**?","french":"Louis : Hein autant ?","showFrench":false,"display":{"tag":"Japanese","args":[{"tag":"OnlyFurigana","args":[]}]}},{"japanese":"**アンナ**：うん！　あかりちゃんと　ルイくんは？","romaji":"**anna**： un ! akari chan to rui kun wa ?","french":"Anna : Oui ! Akari et Louis? (équivalent de “et vous”)","showFrench":false,"display":{"tag":"Japanese","args":[{"tag":"OnlyFurigana","args":[]}]}},{"japanese":"**あかり**：<ruby>私<rt>わたし</rt></ruby>は　**<ruby>子猫<rt>こねこ</rt></ruby>**を　<ruby>飼<rt>か</rt></ruby>ってる。","romaji":"**akari**： watashi wa **koneko** wo  katteru.","french":"Akari : Moi j’ai un chaton","showFrench":false,"display":{"tag":"Japanese","args":[{"tag":"OnlyFurigana","args":[]}]}},{"japanese":"**ルイ**：<ruby>僕<rt>ぼく</rt></ruby>は　<ruby>犬<rt>いぬ</rt></ruby>を　<ruby>飼<rt>か</rt></ruby>ってる。","romaji":"**rui**： boku wa inu wo katteru.","french":"Louis : Moi j’ai un chien","showFrench":false,"display":{"tag":"Japanese","args":[{"tag":"OnlyFurigana","args":[]}]}},{"japanese":"**アンナ**：ええ〜　<ruby>子猫<rt>こねこ</rt></ruby>？　いいな、<ruby>何<rt>なん</rt></ruby><ruby>歳<rt>さい</rt></ruby>　なの？","romaji":"**anna**： ē〜 koneko ?  ii na, nan sai na no ?","french":"Anna : Hein un chaton ? La chance (c'est bien, ça!), il a quel âge ?","showFrench":false,"display":{"tag":"Japanese","args":[{"tag":"OnlyFurigana","args":[]}]}},{"japanese":"**あかり**：**ちょうど　<ruby>六<rt>ろっ</rt></ruby><ruby>ヶ月<rt>かげつ</rt></ruby>**に　なったの。","romaji":"**akari**：**chōdo rokkagetsu** ni natta no.","french":"Akari : Il vient d’avoir 6 mois","showFrench":false,"display":{"tag":"Japanese","args":[{"tag":"OnlyFurigana","args":[]}]}},{"japanese":"**ルイ**：<ruby>面白<rt>おもしろ</rt></ruby>い！<ruby>俺<rt>おれ</rt></ruby>の　<ruby>犬<rt>いぬ</rt></ruby>も！","romaji":"**rui**： omoshiroi ! ore no inu mo !","french":"Louis : C’est marrant mon chien aussi","showFrench":false,"display":{"tag":"Japanese","args":[{"tag":"OnlyFurigana","args":[]}]}},{"japanese":"**アンナ**：<ruby>写真<rt>しゃしん</rt></ruby>　ある？","romaji":"**anna**： shashin aru ?","french":"Anna : Tu as une photo ?","showFrench":false,"display":{"tag":"Japanese","args":[{"tag":"OnlyFurigana","args":[]}]}},{"japanese":"**ルイ**：**もちろん**　あるよ。","romaji":"**rui**：**mochiron** aru yo.","french":"Louis : Bien sûr j’ai une photo","showFrench":false,"display":{"tag":"Japanese","args":[{"tag":"OnlyFurigana","args":[]}]}},{"japanese":"**あんなと　あかり**：かわいい！　お<ruby>名前<rt>なまえ</rt></ruby>は？","romaji":"**anna to  akari**： kawaii ! o-namae wa ?","french":"Anna et Akari : Il est mignon, c’est quoi son nom ?","showFrench":false,"display":{"tag":"Japanese","args":[{"tag":"OnlyFurigana","args":[]}]}},{"japanese":"**ルイ**：エイス！","romaji":"**rui**： eisu !","french":"Louis : Ace !","showFrench":false,"display":{"tag":"Japanese","args":[{"tag":"OnlyFurigana","args":[]}]}},{"japanese":"**あかり**：かっこいい！","romaji":"**akari**： kakkoii !","french":"Akari :  La classe !","showFrench":false,"display":{"tag":"Japanese","args":[{"tag":"OnlyFurigana","args":[]}]}},{"japanese":"**アンナ**：え、ごめん、<ruby>行<rt>い</rt></ruby>かなくっちゃ","romaji":"**anna**： e, gomen, ikanakuccha","french":"Anna : Ah, je suis désolée je dois y aller","showFrench":false,"display":{"tag":"Japanese","args":[{"tag":"OnlyFurigana","args":[]}]}},{"japanese":"**あかり**：ええ、**いいよ**。","romaji":"**akari**： ē,**ii yo**.","french":"Akari : Oh, pas de souci","showFrench":false,"display":{"tag":"Japanese","args":[{"tag":"OnlyFurigana","args":[]}]}},{"japanese":"**ルイ**：また　<ruby>明日<rt>あした</rt></ruby>　ね。","romaji":"**rui**： mata ashita ne.","french":"Louis : À demain !","showFrench":false,"display":{"tag":"Japanese","args":[{"tag":"OnlyFurigana","args":[]}]}},{"japanese":"**アンナ**：うん、また<ruby>明日<rt>あした</rt></ruby>！","romaji":"**anna**： un, mata ashita !","french":"Anna : Oui à demain !","showFrench":false,"display":{"tag":"Japanese","args":[{"tag":"OnlyFurigana","args":[]}]}}],
+          "mode": {
+            "tag": "RJTStudent",
+            "args": []
+          }
+        }
+      ]
+    },
+    "3": {
+      "tag": "ZTJMarkdown",
+      "args": ["### <u>Vocabulaire :</u>"]
+    },
+    "4": {
+      "tag": "ZTJRichJapText",
+      "args": [
+        {
+          "sentences": [{"japanese":"• **<ruby>動物<rt>どうぶつ</rt></ruby>**　= Animaux","romaji":"• **dōbutsu** = Animaux","french":"","showFrench":false,"display":{"tag":"Japanese","args":[{"tag":"KanjiWithFurigana","args":[]}]}},{"japanese":"• **<ruby>大好<rt>だいす</rt></ruby>き** = Adorer","romaji":"• **daisuki** = Adorer","french":"","showFrench":false,"display":{"tag":"Japanese","args":[{"tag":"KanjiWithFurigana","args":[]}]}},{"japanese":"• **そんなに** = Autant que ça","romaji":"• **sonna ni** = Autant que ça","french":"","showFrench":false,"display":{"tag":"Japanese","args":[{"tag":"KanjiWithFurigana","args":[]}]}},{"japanese":"• **<ruby>子猫<rt>こねこ</rt></ruby>** = Chaton","romaji":"• **koneko** = Chaton","french":"","showFrench":false,"display":{"tag":"Japanese","args":[{"tag":"KanjiWithFurigana","args":[]}]}},{"japanese":"• **ちょうど** = Tout juste ","romaji":"• **chōdo** = Tout juste ","french":"","showFrench":false,"display":{"tag":"Japanese","args":[{"tag":"KanjiWithFurigana","args":[]}]}},{"japanese":"• **<ruby>六<rt>ろっ</rt></ruby><ruby>ヶ月<rt>かげつ</rt></ruby>** = Six mois","romaji":"• **rokkagetsu** = Six mois","french":"","showFrench":false,"display":{"tag":"Japanese","args":[{"tag":"KanjiWithFurigana","args":[]}]}},{"japanese":"• **<ruby>写真<rt>しゃしん</rt></ruby>** = Photo","romaji":"• **shashin** = Photo","french":"","showFrench":false,"display":{"tag":"Japanese","args":[{"tag":"KanjiWithFurigana","args":[]}]}},{"japanese":"• **もちろん** = Bien sûr","romaji":"• **mochiron** = Bien sûr","french":"","showFrench":false,"display":{"tag":"Japanese","args":[{"tag":"KanjiWithFurigana","args":[]}]}},{"japanese":"• **いいよ** = C'est pas grave","romaji":"• **ii yo** = C'est pas grave","french":"","showFrench":false,"display":{"tag":"Japanese","args":[{"tag":"KanjiWithFurigana","args":[]}]}}],
+          "mode": {
+            "tag": "RJTStudent",
+            "args": []
+          }
+        }
+      ]
+    }
+  }
+}
