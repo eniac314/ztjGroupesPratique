@@ -28,6 +28,14 @@
             node: document.getElementById('elm-root'),
             flags: flags
         });
+
+        app.ports.copyToClipboard.subscribe(function(text) {
+          navigator.clipboard.writeText(text).then(function() {
+              console.log('Copied to clipboard:', text);
+          }).catch(function(err) {
+            console.error('Could not copy text:', err);
+          });
+        });
     </script>
 </body>
 </html>
