@@ -24,7 +24,7 @@ Dialogue - Conversation du matin
 Dialogue - Les vacances d’été approchent
 Dialogue - Un voyage inoubliable au Japon
 Parler de ses goûts alimentaires
-Dialogue - Contrôle des passeports à l’aéroport
+Dialogue - Controle des passeports à l’aéroport
 
 
 
