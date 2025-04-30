@@ -4547,6 +4547,23 @@ function _Http_track(router, xhr, tracker)
 	});
 }
 
+function _Url_percentEncode(string)
+{
+	return encodeURIComponent(string);
+}
+
+function _Url_percentDecode(string)
+{
+	try
+	{
+		return $elm$core$Maybe$Just(decodeURIComponent(string));
+	}
+	catch (e)
+	{
+		return $elm$core$Maybe$Nothing;
+	}
+}
+
 
 // DECODER
 
@@ -4991,24 +5008,7 @@ var _Regex_splitAtMost = F3(function(n, re, str)
 });
 
 var _Regex_infinity = Infinity;
-
-
-function _Url_percentEncode(string)
-{
-	return encodeURIComponent(string);
-}
-
-function _Url_percentDecode(string)
-{
-	try
-	{
-		return $elm$core$Maybe$Just(decodeURIComponent(string));
-	}
-	catch (e)
-	{
-		return $elm$core$Maybe$Nothing;
-	}
-}var $author$project$Types$ZGPNoOp = {$: 'ZGPNoOp'};
+var $author$project$Types$ZGPNoOp = {$: 'ZGPNoOp'};
 var $elm$core$Basics$always = F2(
 	function (a, _v0) {
 		return a;
@@ -6596,7 +6596,61 @@ var $elm$http$Http$get = function (r) {
 	return $elm$http$Http$request(
 		{body: $elm$http$Http$emptyBody, expect: r.expect, headers: _List_Nil, method: 'GET', timeout: $elm$core$Maybe$Nothing, tracker: $elm$core$Maybe$Nothing, url: r.url});
 };
+var $elm$url$Url$percentDecode = _Url_percentDecode;
 var $author$project$ZtjGrpPratique$root = 'data/ztjGp/';
+var $elm$url$Url$addPort = F2(
+	function (maybePort, starter) {
+		if (maybePort.$ === 'Nothing') {
+			return starter;
+		} else {
+			var port_ = maybePort.a;
+			return starter + (':' + $elm$core$String$fromInt(port_));
+		}
+	});
+var $elm$url$Url$addPrefixed = F3(
+	function (prefix, maybeSegment, starter) {
+		if (maybeSegment.$ === 'Nothing') {
+			return starter;
+		} else {
+			var segment = maybeSegment.a;
+			return _Utils_ap(
+				starter,
+				_Utils_ap(prefix, segment));
+		}
+	});
+var $elm$url$Url$toString = function (url) {
+	var http = function () {
+		var _v0 = url.protocol;
+		if (_v0.$ === 'Http') {
+			return 'http://';
+		} else {
+			return 'https://';
+		}
+	}();
+	return A3(
+		$elm$url$Url$addPrefixed,
+		'#',
+		url.fragment,
+		A3(
+			$elm$url$Url$addPrefixed,
+			'?',
+			url.query,
+			_Utils_ap(
+				A2(
+					$elm$url$Url$addPort,
+					url.port_,
+					_Utils_ap(http, url.host)),
+				url.path)));
+};
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
 var $author$project$ZtjGrpPratique$init = F2(
 	function (flags, url) {
 		return _Utils_Tuple2(
@@ -6614,6 +6668,11 @@ var $author$project$ZtjGrpPratique$init = F2(
 				mode: (flags.mode === 'admin') ? $author$project$Types$ZGPAdmin : $author$project$Types$ZGPStudent,
 				rjtInput: $elm$core$Maybe$Nothing,
 				selectedDocItem: $elm$core$Maybe$Nothing,
+				startUrl: A2(
+					$elm$core$Maybe$withDefault,
+					'',
+					$elm$url$Url$percentDecode(
+						$elm$url$Url$toString(url))),
 				titleInput: $elm$core$Maybe$Nothing,
 				width: flags.width
 			},
@@ -6938,12 +6997,14 @@ var $author$project$Types$ZGPDocLoaded = function (a) {
 var $author$project$Types$ZGPFileLoaded = function (a) {
 	return {$: 'ZGPFileLoaded', a: a};
 };
-var $author$project$Types$ZJPGotDocContents = function (a) {
-	return {$: 'ZJPGotDocContents', a: a};
-};
-var $author$project$Types$ZJPGotGrammarDocContents = function (a) {
-	return {$: 'ZJPGotGrammarDocContents', a: a};
-};
+var $author$project$Types$ZJPGotDocContents = F2(
+	function (a, b) {
+		return {$: 'ZJPGotDocContents', a: a, b: b};
+	});
+var $author$project$Types$ZJPGotGrammarDocContents = F2(
+	function (a, b) {
+		return {$: 'ZJPGotGrammarDocContents', a: a, b: b};
+	});
 var $author$project$Types$ZTJMarkdown = function (a) {
 	return {$: 'ZTJMarkdown', a: a};
 };
@@ -7814,15 +7875,61 @@ var $elm_community$list_extra$List$Extra$swapAt = F3(
 		}
 	});
 var $elm$file$File$toString = _File_toString;
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
+var $elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return $elm$core$Maybe$Just(x);
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
+var $elm_community$string_extra$String$Extra$rightOfBack = F2(
+	function (pattern, string) {
+		return A2(
+			$elm$core$Maybe$withDefault,
+			'',
+			A2(
+				$elm$core$Maybe$map,
+				A2(
+					$elm$core$Basics$composeR,
+					$elm$core$Basics$add(
+						$elm$core$String$length(pattern)),
+					function (a) {
+						return A2($elm$core$String$dropLeft, a, string);
+					}),
+				$elm$core$List$head(
+					$elm$core$List$reverse(
+						A2($elm$core$String$indexes, pattern, string)))));
 	});
+var $author$project$ZtjGrpPratique$urlParser = function (startUrl) {
+	var _v0 = A2(
+		$elm$core$String$split,
+		'/',
+		A2($elm_community$string_extra$String$Extra$rightOfBack, '#', startUrl));
+	_v0$2:
+	while (true) {
+		if ((_v0.b && _v0.b.b) && (!_v0.b.b.b)) {
+			switch (_v0.a) {
+				case 'script':
+					var _v1 = _v0.b;
+					var title = _v1.a;
+					return $elm$core$Maybe$Just(
+						_Utils_Tuple2('script', title));
+				case 'grammar':
+					var _v2 = _v0.b;
+					var title = _v2.a;
+					return $elm$core$Maybe$Just(
+						_Utils_Tuple2('grammar', title));
+				default:
+					break _v0$2;
+			}
+		} else {
+			break _v0$2;
+		}
+	}
+	return $elm$core$Maybe$Nothing;
+};
 var $author$project$Types$ZTJDoc = F5(
 	function (level, tags, bienvenueRef, title, contents) {
 		return {bienvenueRef: bienvenueRef, contents: contents, level: level, tags: tags, title: title};
@@ -8092,6 +8199,16 @@ var $author$project$ZtjGrpPratique$update = F2(
 				if (res.$ === 'Ok') {
 					var index = res.a;
 					var filenames = $elm$core$String$lines(index);
+					var fileToload = function () {
+						var _v2 = $author$project$ZtjGrpPratique$urlParser(model.startUrl);
+						if ((_v2.$ === 'Just') && (_v2.a.a === 'script')) {
+							var _v3 = _v2.a;
+							var title = _v3.b;
+							return $elm$core$Maybe$Just(title);
+						} else {
+							return $elm$core$Maybe$Nothing;
+						}
+					}();
 					return _Utils_Tuple2(
 						model,
 						$elm$core$Platform$Cmd$batch(
@@ -8102,7 +8219,10 @@ var $author$project$ZtjGrpPratique$update = F2(
 										{
 											expect: A2(
 												$elm$http$Http$expectJson,
-												$author$project$Types$ZJPGotDocContents,
+												$author$project$Types$ZJPGotDocContents(
+													_Utils_eq(
+														$elm$core$Maybe$Just(fn),
+														fileToload)),
 												$miniBill$elm_codec$Codec$decoder($author$project$ZtjGrpPratique$ztjDocCodec)),
 											url: $author$project$ZtjGrpPratique$root + (fn + '.json')
 										});
@@ -8112,13 +8232,15 @@ var $author$project$ZtjGrpPratique$update = F2(
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
 			case 'ZJPGotDocContents':
-				var res = msg.a;
+				var toLoad = msg.a;
+				var res = msg.b;
 				if (res.$ === 'Ok') {
 					var doc = res.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
 							{
+								currentDoc: toLoad ? $elm$core$Maybe$Just(doc) : model.currentDoc,
 								documents: A3($elm$core$Dict$insert, doc.title, doc, model.documents)
 							}),
 						$elm$core$Platform$Cmd$none);
@@ -8150,6 +8272,16 @@ var $author$project$ZtjGrpPratique$update = F2(
 				if (res.$ === 'Ok') {
 					var index = res.a;
 					var filenames = $elm$core$String$lines(index);
+					var fileToload = function () {
+						var _v6 = $author$project$ZtjGrpPratique$urlParser(model.startUrl);
+						if ((_v6.$ === 'Just') && (_v6.a.a === 'grammar')) {
+							var _v7 = _v6.a;
+							var title = _v7.b;
+							return $elm$core$Maybe$Just(title);
+						} else {
+							return $elm$core$Maybe$Nothing;
+						}
+					}();
 					return _Utils_Tuple2(
 						model,
 						$elm$core$Platform$Cmd$batch(
@@ -8160,7 +8292,10 @@ var $author$project$ZtjGrpPratique$update = F2(
 										{
 											expect: A2(
 												$elm$http$Http$expectJson,
-												$author$project$Types$ZJPGotGrammarDocContents,
+												$author$project$Types$ZJPGotGrammarDocContents(
+													_Utils_eq(
+														$elm$core$Maybe$Just(fn),
+														fileToload)),
 												$miniBill$elm_codec$Codec$decoder($author$project$ZtjGrpPratique$ztjDocCodec)),
 											url: $author$project$ZtjGrpPratique$root + ('grammar/' + (fn + '.json'))
 										});
@@ -8170,13 +8305,15 @@ var $author$project$ZtjGrpPratique$update = F2(
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
 			case 'ZJPGotGrammarDocContents':
-				var res = msg.a;
+				var toLoad = msg.a;
+				var res = msg.b;
 				if (res.$ === 'Ok') {
 					var doc = res.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
 							{
+								currentDoc: toLoad ? $elm$core$Maybe$Just(doc) : model.currentDoc,
 								grammarDocs: A3($elm$core$Dict$insert, doc.title, doc, model.grammarDocs)
 							}),
 						$elm$core$Platform$Cmd$none);
@@ -8186,12 +8323,12 @@ var $author$project$ZtjGrpPratique$update = F2(
 			case 'RJTWrapper':
 				var itemId = msg.a;
 				var rjtMsg = msg.b;
-				var _v5 = model.currentDoc;
-				if (_v5.$ === 'Just') {
-					var doc = _v5.a;
-					var _v6 = A2($elm$core$Dict$get, itemId, doc.contents);
-					if ((_v6.$ === 'Just') && (_v6.a.$ === 'ZTJRichJapText')) {
-						var rjt = _v6.a.a;
+				var _v9 = model.currentDoc;
+				if (_v9.$ === 'Just') {
+					var doc = _v9.a;
+					var _v10 = A2($elm$core$Dict$get, itemId, doc.contents);
+					if ((_v10.$ === 'Just') && (_v10.a.$ === 'ZTJRichJapText')) {
+						var rjt = _v10.a.a;
 						var newRjt = $author$project$Types$ZTJRichJapText(
 							A2($author$project$ZtjGrpPratique$rjtUpdate, rjt, rjtMsg));
 						var newDoc = _Utils_update(
@@ -8282,12 +8419,12 @@ var $author$project$ZtjGrpPratique$update = F2(
 					$elm$core$Platform$Cmd$none);
 			case 'ZGPAddRichJapText':
 				var toTop = msg.a;
-				var _v7 = A2(
+				var _v11 = A2(
 					$elm$core$Maybe$map,
 					$elm$json$Json$Decode$decodeString($author$project$ZtjGrpPratique$rjtDecoder),
 					model.rjtInput);
-				if ((_v7.$ === 'Just') && (_v7.a.$ === 'Ok')) {
-					var rjt = _v7.a.a;
+				if ((_v11.$ === 'Just') && (_v11.a.$ === 'Ok')) {
+					var rjt = _v11.a.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -8324,11 +8461,11 @@ var $author$project$ZtjGrpPratique$update = F2(
 					model.selectedDocItem,
 					$elm$core$Maybe$Just(i)) ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(i);
 				var newModel = function () {
-					var _v8 = A2($author$project$ZtjGrpPratique$getItemAt, model, i);
-					if (_v8.$ === 'Just') {
-						switch (_v8.a.$) {
+					var _v12 = A2($author$project$ZtjGrpPratique$getItemAt, model, i);
+					if (_v12.$ === 'Just') {
+						switch (_v12.a.$) {
 							case 'ZTJMarkdown':
-								var md = _v8.a.a;
+								var md = _v12.a.a;
 								return _Utils_update(
 									model,
 									{
@@ -8336,9 +8473,9 @@ var $author$project$ZtjGrpPratique$update = F2(
 										selectedDocItem: newSelected
 									});
 							case 'ZTJCollapsableMarkdown':
-								var _v9 = _v8.a;
-								var title = _v9.a;
-								var content = _v9.b;
+								var _v13 = _v12.a;
+								var title = _v13.a;
+								var content = _v13.b;
 								return _Utils_update(
 									model,
 									{
@@ -8346,7 +8483,7 @@ var $author$project$ZtjGrpPratique$update = F2(
 										selectedDocItem: newSelected
 									});
 							case 'ZGPAudio':
-								var url = _v8.a.a;
+								var url = _v12.a.a;
 								return _Utils_update(
 									model,
 									{
@@ -8354,7 +8491,7 @@ var $author$project$ZtjGrpPratique$update = F2(
 										selectedDocItem: newSelected
 									});
 							default:
-								var rjt = _v8.a.a;
+								var rjt = _v12.a.a;
 								return _Utils_update(
 									model,
 									{
@@ -8373,18 +8510,18 @@ var $author$project$ZtjGrpPratique$update = F2(
 			case 'ZGPSwapItem':
 				var i = msg.a;
 				var j = msg.b;
-				var _v10 = model.currentDoc;
-				if (_v10.$ === 'Just') {
-					var doc = _v10.a;
+				var _v14 = model.currentDoc;
+				if (_v14.$ === 'Just') {
+					var doc = _v14.a;
 					var newDoc = _Utils_update(
 						doc,
 						{
 							contents: function () {
-								var _v11 = _Utils_Tuple2(
+								var _v15 = _Utils_Tuple2(
 									$elm$core$Dict$keys(doc.contents),
 									$elm$core$Dict$values(doc.contents));
-								var keys = _v11.a;
-								var values = _v11.b;
+								var keys = _v15.a;
+								var values = _v15.b;
 								return $elm$core$Dict$fromList(
 									A3(
 										$elm$core$List$map2,
@@ -8405,9 +8542,9 @@ var $author$project$ZtjGrpPratique$update = F2(
 				}
 			case 'ZGPRemoveItem':
 				var i = msg.a;
-				var _v12 = model.currentDoc;
-				if (_v12.$ === 'Just') {
-					var doc = _v12.a;
+				var _v16 = model.currentDoc;
+				if (_v16.$ === 'Just') {
+					var doc = _v16.a;
 					var newDoc = _Utils_update(
 						doc,
 						{
@@ -8453,9 +8590,9 @@ var $author$project$ZtjGrpPratique$update = F2(
 					$elm$core$Platform$Cmd$none);
 			case 'ZGPDocLoaded':
 				var docStr = msg.a;
-				var _v13 = A2($miniBill$elm_codec$Codec$decodeString, $author$project$ZtjGrpPratique$ztjDocCodec, docStr);
-				if (_v13.$ === 'Ok') {
-					var doc = _v13.a;
+				var _v17 = A2($miniBill$elm_codec$Codec$decodeString, $author$project$ZtjGrpPratique$ztjDocCodec, docStr);
+				if (_v17.$ === 'Ok') {
+					var doc = _v17.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -8472,9 +8609,9 @@ var $author$project$ZtjGrpPratique$update = F2(
 						$elm$core$Platform$Cmd$none);
 				}
 			case 'ZGPToggleCollapsable':
-				var _v14 = msg.a;
-				var title = _v14.a;
-				var id = _v14.b;
+				var _v18 = msg.a;
+				var title = _v18.a;
+				var id = _v18.b;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -16442,15 +16579,6 @@ var $elm$core$Result$fromMaybe = F2(
 			return $elm$core$Result$Err(err);
 		}
 	});
-var $elm$core$List$head = function (list) {
-	if (list.b) {
-		var x = list.a;
-		var xs = list.b;
-		return $elm$core$Maybe$Just(x);
-	} else {
-		return $elm$core$Maybe$Nothing;
-	}
-};
 var $pablohirafuji$elm_markdown$Markdown$Block$checkATXHeadingLine = function (_v0) {
 	var rawLine = _v0.a;
 	var ast = _v0.b;
@@ -18567,7 +18695,6 @@ var $pablohirafuji$elm_markdown$Markdown$InlineParser$decodeUrlRegex = A2(
 	$elm$core$Maybe$withDefault,
 	$elm$regex$Regex$never,
 	$elm$regex$Regex$fromString('%(?:3B|2C|2F|3F|3A|40|26|3D|2B|24|23|25)'));
-var $elm$url$Url$percentDecode = _Url_percentDecode;
 var $elm$url$Url$percentEncode = _Url_percentEncode;
 var $pablohirafuji$elm_markdown$Markdown$InlineParser$encodeUrl = A2(
 	$elm$core$Basics$composeR,
