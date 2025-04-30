@@ -5805,6 +5805,9 @@ var $elm$core$Task$perform = F2(
 var $elm$browser$Browser$application = _Browser_application;
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $author$project$Types$ZGPAdmin = {$: 'ZGPAdmin'};
+var $author$project$Types$ZGPGotGrammarIndex = function (a) {
+	return {$: 'ZGPGotGrammarIndex', a: a};
+};
 var $author$project$Types$ZGPGotIndex = function (a) {
 	return {$: 'ZGPGotIndex', a: a};
 };
@@ -6604,6 +6607,7 @@ var $author$project$ZtjGrpPratique$init = F2(
 				currentDoc: $elm$core$Maybe$Nothing,
 				documents: $elm$core$Dict$empty,
 				fontSize: 18,
+				grammarDocs: $elm$core$Dict$empty,
 				height: flags.height,
 				levelInput: $elm$core$Maybe$Nothing,
 				markdownInput: $elm$core$Maybe$Nothing,
@@ -6620,6 +6624,11 @@ var $author$project$ZtjGrpPratique$init = F2(
 						{
 							expect: $elm$http$Http$expectString($author$project$Types$ZGPGotIndex),
 							url: $author$project$ZtjGrpPratique$root + 'indexScripts.txt'
+						}),
+						$elm$http$Http$get(
+						{
+							expect: $elm$http$Http$expectString($author$project$Types$ZGPGotGrammarIndex),
+							url: $author$project$ZtjGrpPratique$root + 'indexGrammar.txt'
 						})
 					])));
 	});
@@ -6931,6 +6940,9 @@ var $author$project$Types$ZGPFileLoaded = function (a) {
 };
 var $author$project$Types$ZJPGotDocContents = function (a) {
 	return {$: 'ZJPGotDocContents', a: a};
+};
+var $author$project$Types$ZJPGotGrammarDocContents = function (a) {
+	return {$: 'ZJPGotGrammarDocContents', a: a};
 };
 var $author$project$Types$ZTJMarkdown = function (a) {
 	return {$: 'ZTJMarkdown', a: a};
@@ -8113,15 +8125,73 @@ var $author$project$ZtjGrpPratique$update = F2(
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
+			case 'ZJTSelectDoc':
+				var title = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							currentDoc: A2($elm$core$Dict$get, title, model.documents),
+							titleInput: $elm$core$Maybe$Just(title)
+						}),
+					$elm$core$Platform$Cmd$none);
+			case 'ZJTSelectGrammarDoc':
+				var title = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							currentDoc: A2($elm$core$Dict$get, title, model.grammarDocs),
+							titleInput: $elm$core$Maybe$Just(title)
+						}),
+					$elm$core$Platform$Cmd$none);
+			case 'ZGPGotGrammarIndex':
+				var res = msg.a;
+				if (res.$ === 'Ok') {
+					var index = res.a;
+					var filenames = $elm$core$String$lines(index);
+					return _Utils_Tuple2(
+						model,
+						$elm$core$Platform$Cmd$batch(
+							A2(
+								$elm$core$List$map,
+								function (fn) {
+									return $elm$http$Http$get(
+										{
+											expect: A2(
+												$elm$http$Http$expectJson,
+												$author$project$Types$ZJPGotGrammarDocContents,
+												$miniBill$elm_codec$Codec$decoder($author$project$ZtjGrpPratique$ztjDocCodec)),
+											url: $author$project$ZtjGrpPratique$root + ('grammar/' + (fn + '.json'))
+										});
+								},
+								filenames)));
+				} else {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
+			case 'ZJPGotGrammarDocContents':
+				var res = msg.a;
+				if (res.$ === 'Ok') {
+					var doc = res.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								grammarDocs: A3($elm$core$Dict$insert, doc.title, doc, model.grammarDocs)
+							}),
+						$elm$core$Platform$Cmd$none);
+				} else {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
 			case 'RJTWrapper':
 				var itemId = msg.a;
 				var rjtMsg = msg.b;
-				var _v3 = model.currentDoc;
-				if (_v3.$ === 'Just') {
-					var doc = _v3.a;
-					var _v4 = A2($elm$core$Dict$get, itemId, doc.contents);
-					if ((_v4.$ === 'Just') && (_v4.a.$ === 'ZTJRichJapText')) {
-						var rjt = _v4.a.a;
+				var _v5 = model.currentDoc;
+				if (_v5.$ === 'Just') {
+					var doc = _v5.a;
+					var _v6 = A2($elm$core$Dict$get, itemId, doc.contents);
+					if ((_v6.$ === 'Just') && (_v6.a.$ === 'ZTJRichJapText')) {
+						var rjt = _v6.a.a;
 						var newRjt = $author$project$Types$ZTJRichJapText(
 							A2($author$project$ZtjGrpPratique$rjtUpdate, rjt, rjtMsg));
 						var newDoc = _Utils_update(
@@ -8142,16 +8212,6 @@ var $author$project$ZtjGrpPratique$update = F2(
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
-			case 'ZJTSelectDoc':
-				var title = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							currentDoc: A2($elm$core$Dict$get, title, model.documents),
-							titleInput: $elm$core$Maybe$Just(title)
-						}),
-					$elm$core$Platform$Cmd$none);
 			case 'ZGPMardownInput':
 				var s = msg.a;
 				return _Utils_Tuple2(
@@ -8222,12 +8282,12 @@ var $author$project$ZtjGrpPratique$update = F2(
 					$elm$core$Platform$Cmd$none);
 			case 'ZGPAddRichJapText':
 				var toTop = msg.a;
-				var _v5 = A2(
+				var _v7 = A2(
 					$elm$core$Maybe$map,
 					$elm$json$Json$Decode$decodeString($author$project$ZtjGrpPratique$rjtDecoder),
 					model.rjtInput);
-				if ((_v5.$ === 'Just') && (_v5.a.$ === 'Ok')) {
-					var rjt = _v5.a.a;
+				if ((_v7.$ === 'Just') && (_v7.a.$ === 'Ok')) {
+					var rjt = _v7.a.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -8264,11 +8324,11 @@ var $author$project$ZtjGrpPratique$update = F2(
 					model.selectedDocItem,
 					$elm$core$Maybe$Just(i)) ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(i);
 				var newModel = function () {
-					var _v6 = A2($author$project$ZtjGrpPratique$getItemAt, model, i);
-					if (_v6.$ === 'Just') {
-						switch (_v6.a.$) {
+					var _v8 = A2($author$project$ZtjGrpPratique$getItemAt, model, i);
+					if (_v8.$ === 'Just') {
+						switch (_v8.a.$) {
 							case 'ZTJMarkdown':
-								var md = _v6.a.a;
+								var md = _v8.a.a;
 								return _Utils_update(
 									model,
 									{
@@ -8276,9 +8336,9 @@ var $author$project$ZtjGrpPratique$update = F2(
 										selectedDocItem: newSelected
 									});
 							case 'ZTJCollapsableMarkdown':
-								var _v7 = _v6.a;
-								var title = _v7.a;
-								var content = _v7.b;
+								var _v9 = _v8.a;
+								var title = _v9.a;
+								var content = _v9.b;
 								return _Utils_update(
 									model,
 									{
@@ -8286,7 +8346,7 @@ var $author$project$ZtjGrpPratique$update = F2(
 										selectedDocItem: newSelected
 									});
 							case 'ZGPAudio':
-								var url = _v6.a.a;
+								var url = _v8.a.a;
 								return _Utils_update(
 									model,
 									{
@@ -8294,7 +8354,7 @@ var $author$project$ZtjGrpPratique$update = F2(
 										selectedDocItem: newSelected
 									});
 							default:
-								var rjt = _v6.a.a;
+								var rjt = _v8.a.a;
 								return _Utils_update(
 									model,
 									{
@@ -8313,18 +8373,18 @@ var $author$project$ZtjGrpPratique$update = F2(
 			case 'ZGPSwapItem':
 				var i = msg.a;
 				var j = msg.b;
-				var _v8 = model.currentDoc;
-				if (_v8.$ === 'Just') {
-					var doc = _v8.a;
+				var _v10 = model.currentDoc;
+				if (_v10.$ === 'Just') {
+					var doc = _v10.a;
 					var newDoc = _Utils_update(
 						doc,
 						{
 							contents: function () {
-								var _v9 = _Utils_Tuple2(
+								var _v11 = _Utils_Tuple2(
 									$elm$core$Dict$keys(doc.contents),
 									$elm$core$Dict$values(doc.contents));
-								var keys = _v9.a;
-								var values = _v9.b;
+								var keys = _v11.a;
+								var values = _v11.b;
 								return $elm$core$Dict$fromList(
 									A3(
 										$elm$core$List$map2,
@@ -8345,9 +8405,9 @@ var $author$project$ZtjGrpPratique$update = F2(
 				}
 			case 'ZGPRemoveItem':
 				var i = msg.a;
-				var _v10 = model.currentDoc;
-				if (_v10.$ === 'Just') {
-					var doc = _v10.a;
+				var _v12 = model.currentDoc;
+				if (_v12.$ === 'Just') {
+					var doc = _v12.a;
 					var newDoc = _Utils_update(
 						doc,
 						{
@@ -8393,9 +8453,9 @@ var $author$project$ZtjGrpPratique$update = F2(
 					$elm$core$Platform$Cmd$none);
 			case 'ZGPDocLoaded':
 				var docStr = msg.a;
-				var _v11 = A2($miniBill$elm_codec$Codec$decodeString, $author$project$ZtjGrpPratique$ztjDocCodec, docStr);
-				if (_v11.$ === 'Ok') {
-					var doc = _v11.a;
+				var _v13 = A2($miniBill$elm_codec$Codec$decodeString, $author$project$ZtjGrpPratique$ztjDocCodec, docStr);
+				if (_v13.$ === 'Ok') {
+					var doc = _v13.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -8412,9 +8472,9 @@ var $author$project$ZtjGrpPratique$update = F2(
 						$elm$core$Platform$Cmd$none);
 				}
 			case 'ZGPToggleCollapsable':
-				var _v12 = msg.a;
-				var title = _v12.a;
-				var id = _v12.b;
+				var _v14 = msg.a;
+				var title = _v14.a;
+				var id = _v14.b;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -21540,6 +21600,9 @@ var $author$project$Types$ZGPChangeFontSize = function (a) {
 var $author$project$Types$ZJTSelectDoc = function (a) {
 	return {$: 'ZJTSelectDoc', a: a};
 };
+var $author$project$Types$ZJTSelectGrammarDoc = function (a) {
+	return {$: 'ZJTSelectGrammarDoc', a: a};
+};
 var $mdgriffith$elm_ui$Internal$Model$FontFamily = F2(
 	function (a, b) {
 		return {$: 'FontFamily', a: a, b: b};
@@ -21655,6 +21718,8 @@ var $author$project$ZtjGrpPratique$select = F2(
 var $mdgriffith$elm_ui$Internal$Flag$fontWeight = $mdgriffith$elm_ui$Internal$Flag$flag(13);
 var $mdgriffith$elm_ui$Element$Font$semiBold = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.textSemiBold);
 var $author$project$ZtjGrpPratique$selectionView = function (model) {
+	var grammarDocLanding = _Utils_eq(model.currentDoc, $elm$core$Maybe$Nothing) ? '-- Choisir un point de grammaire --' : ' -- Retour accueil --';
+	var docLanding = _Utils_eq(model.currentDoc, $elm$core$Maybe$Nothing) ? '-- Choisir un script --' : ' -- Retour accueil --';
 	return A2(
 		$mdgriffith$elm_ui$Element$wrappedRow,
 		_List_fromArray(
@@ -21676,8 +21741,26 @@ var $author$project$ZtjGrpPratique$selectionView = function (model) {
 							handler: $author$project$Types$ZJTSelectDoc,
 							options: A2(
 								$elm$core$List$cons,
-								'--',
+								docLanding,
 								$elm$core$Dict$keys(model.documents)),
+							toString: $elm$core$Basics$identity
+						})
+					])),
+				A2(
+				$mdgriffith$elm_ui$Element$column,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						$author$project$ZtjGrpPratique$select,
+						_List_Nil,
+						{
+							fromString: $elm$core$Basics$identity,
+							handler: $author$project$Types$ZJTSelectGrammarDoc,
+							options: A2(
+								$elm$core$List$cons,
+								grammarDocLanding,
+								$elm$core$Dict$keys(model.grammarDocs)),
 							toString: $elm$core$Basics$identity
 						})
 					])),
