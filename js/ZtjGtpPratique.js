@@ -6596,7 +6596,24 @@ var $elm$http$Http$get = function (r) {
 	return $elm$http$Http$request(
 		{body: $elm$http$Http$emptyBody, expect: r.expect, headers: _List_Nil, method: 'GET', timeout: $elm$core$Maybe$Nothing, tracker: $elm$core$Maybe$Nothing, url: r.url});
 };
+var $elm$core$Maybe$map = F2(
+	function (f, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return $elm$core$Maybe$Just(
+				f(value));
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
 var $elm$url$Url$percentDecode = _Url_percentDecode;
+var $elm$core$String$replace = F3(
+	function (before, after, string) {
+		return A2(
+			$elm$core$String$join,
+			after,
+			A2($elm$core$String$split, before, string));
+	});
 var $author$project$ZtjGrpPratique$root = 'data/ztjGp/';
 var $elm$url$Url$addPort = F2(
 	function (maybePort, starter) {
@@ -6671,8 +6688,11 @@ var $author$project$ZtjGrpPratique$init = F2(
 				startUrl: A2(
 					$elm$core$Maybe$withDefault,
 					'',
-					$elm$url$Url$percentDecode(
-						$elm$url$Url$toString(url))),
+					A2(
+						$elm$core$Maybe$map,
+						A2($elm$core$String$replace, '_', ' '),
+						$elm$url$Url$percentDecode(
+							$elm$url$Url$toString(url)))),
 				titleInput: $elm$core$Maybe$Nothing,
 				width: flags.width
 			},
@@ -7130,16 +7150,6 @@ var $elm$core$Set$insert = F2(
 			A3($elm$core$Dict$insert, key, _Utils_Tuple0, dict));
 	});
 var $elm$core$String$lines = _String_lines;
-var $elm$core$Maybe$map = F2(
-	function (f, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return $elm$core$Maybe$Just(
-				f(value));
-		} else {
-			return $elm$core$Maybe$Nothing;
-		}
-	});
 var $author$project$Utils$Utils$mbStr = function (s) {
 	return (s === '') ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(s);
 };
@@ -15830,13 +15840,6 @@ var $avh4$elm_color$Color$RgbaSpace = F4(
 	});
 var $avh4$elm_color$Color$darkBlue = A4($avh4$elm_color$Color$RgbaSpace, 32 / 255, 74 / 255, 135 / 255, 1.0);
 var $author$project$Style$Palette$darkBlue = $author$project$Style$Palette$colorConv($avh4$elm_color$Color$darkBlue);
-var $elm$core$String$replace = F3(
-	function (before, after, string) {
-		return A2(
-			$elm$core$String$join,
-			after,
-			A2($elm$core$String$split, before, string));
-	});
 var $author$project$Plugins$RichJapText$hideFurigana = function (s) {
 	return A3($elm$core$String$replace, '<rt>', '<rt class=\"hidden\">', s);
 };
