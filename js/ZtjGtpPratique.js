@@ -7031,7 +7031,7 @@ var $author$project$Types$ZTJMarkdown = function (a) {
 var $author$project$Types$ZTJRichJapText = function (a) {
 	return {$: 'ZTJRichJapText', a: a};
 };
-var $author$project$ZtjGrpPratique$emptyDoc = {bienvenueRef: _List_Nil, contents: $elm$core$Dict$empty, level: 0, tags: _List_Nil, title: ''};
+var $author$project$ZtjGrpPratique$emptyDoc = {bienvenueRef: _List_Nil, contents: $elm$core$Dict$empty, level: 0, tags: _List_Nil, title: '', wholePageControls: $elm$core$Maybe$Nothing};
 var $elm$core$Tuple$pair = F2(
 	function (a, b) {
 		return _Utils_Tuple2(a, b);
@@ -7940,9 +7940,9 @@ var $author$project$ZtjGrpPratique$urlParser = function (startUrl) {
 	}
 	return $elm$core$Maybe$Nothing;
 };
-var $author$project$Types$ZTJDoc = F5(
-	function (level, tags, bienvenueRef, title, contents) {
-		return {bienvenueRef: bienvenueRef, contents: contents, level: level, tags: tags, title: title};
+var $author$project$Types$ZTJDoc = F6(
+	function (level, tags, bienvenueRef, title, contents, wholePageControls) {
+		return {bienvenueRef: bienvenueRef, contents: contents, level: level, tags: tags, title: title, wholePageControls: wholePageControls};
 	});
 var $elm$json$Json$Encode$int = _Json_wrap;
 var $miniBill$elm_codec$Codec$int = A2($miniBill$elm_codec$Codec$build, $elm$json$Json$Encode$int, $elm$json$Json$Decode$int);
@@ -8039,6 +8039,53 @@ var $author$project$ZtjGrpPratique$intDictCodec = function (valCodec) {
 		},
 		$miniBill$elm_codec$Codec$dict(valCodec));
 };
+var $elm$json$Json$Decode$value = _Json_decodeValue;
+var $miniBill$elm_codec$Codec$optionalField = F4(
+	function (name, getter, codec, _v0) {
+		var ocodec = _v0.a;
+		return $miniBill$elm_codec$Codec$ObjectCodec(
+			{
+				decoder: A3(
+					$elm$json$Json$Decode$map2,
+					F2(
+						function (f, x) {
+							return f(x);
+						}),
+					ocodec.decoder,
+					A2(
+						$elm$json$Json$Decode$andThen,
+						function (json) {
+							return A2(
+								$elm$core$List$any,
+								function (_v1) {
+									var k = _v1.a;
+									return _Utils_eq(k, name);
+								},
+								json) ? A2(
+								$elm$json$Json$Decode$map,
+								$elm$core$Maybe$Just,
+								A2(
+									$elm$json$Json$Decode$field,
+									name,
+									$miniBill$elm_codec$Codec$decoder(codec))) : $elm$json$Json$Decode$succeed($elm$core$Maybe$Nothing);
+						},
+						$elm$json$Json$Decode$keyValuePairs($elm$json$Json$Decode$value))),
+				encoder: function (v) {
+					var _v2 = getter(v);
+					if (_v2.$ === 'Just') {
+						var present = _v2.a;
+						return A2(
+							$elm$core$List$cons,
+							_Utils_Tuple2(
+								name,
+								A2($miniBill$elm_codec$Codec$encoder, codec, present)),
+							ocodec.encoder(v));
+					} else {
+						return ocodec.encoder(v);
+					}
+				}
+			});
+	});
 var $author$project$Types$ZTJCollapsableMarkdown = F2(
 	function (a, b) {
 		return {$: 'ZTJCollapsableMarkdown', a: a, b: b};
@@ -8158,41 +8205,48 @@ var $author$project$ZtjGrpPratique$ztjDocTagCodec = $miniBill$elm_codec$Codec$bu
 								}))))))));
 var $author$project$ZtjGrpPratique$ztjDocCodec = $miniBill$elm_codec$Codec$buildObject(
 	A4(
-		$miniBill$elm_codec$Codec$field,
-		'contents',
+		$miniBill$elm_codec$Codec$optionalField,
+		'wholePageControls',
 		function ($) {
-			return $.contents;
+			return $.wholePageControls;
 		},
-		$author$project$ZtjGrpPratique$intDictCodec($author$project$ZtjGrpPratique$ztjDocItemCodec),
+		$miniBill$elm_codec$Codec$bool,
 		A4(
 			$miniBill$elm_codec$Codec$field,
-			'title',
+			'contents',
 			function ($) {
-				return $.title;
+				return $.contents;
 			},
-			$miniBill$elm_codec$Codec$string,
+			$author$project$ZtjGrpPratique$intDictCodec($author$project$ZtjGrpPratique$ztjDocItemCodec),
 			A4(
 				$miniBill$elm_codec$Codec$field,
-				'bienvenueRef',
+				'title',
 				function ($) {
-					return $.bienvenueRef;
+					return $.title;
 				},
-				$miniBill$elm_codec$Codec$list($miniBill$elm_codec$Codec$int),
+				$miniBill$elm_codec$Codec$string,
 				A4(
 					$miniBill$elm_codec$Codec$field,
-					'tags',
+					'bienvenueRef',
 					function ($) {
-						return $.tags;
+						return $.bienvenueRef;
 					},
-					$miniBill$elm_codec$Codec$list($author$project$ZtjGrpPratique$ztjDocTagCodec),
+					$miniBill$elm_codec$Codec$list($miniBill$elm_codec$Codec$int),
 					A4(
 						$miniBill$elm_codec$Codec$field,
-						'level',
+						'tags',
 						function ($) {
-							return $.level;
+							return $.tags;
 						},
-						$miniBill$elm_codec$Codec$int,
-						$miniBill$elm_codec$Codec$object($author$project$Types$ZTJDoc)))))));
+						$miniBill$elm_codec$Codec$list($author$project$ZtjGrpPratique$ztjDocTagCodec),
+						A4(
+							$miniBill$elm_codec$Codec$field,
+							'level',
+							function ($) {
+								return $.level;
+							},
+							$miniBill$elm_codec$Codec$int,
+							$miniBill$elm_codec$Codec$object($author$project$Types$ZTJDoc))))))));
 var $author$project$ZtjGrpPratique$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
@@ -8330,15 +8384,54 @@ var $author$project$ZtjGrpPratique$update = F2(
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
-			case 'RJTWrapper':
-				var itemId = msg.a;
-				var rjtMsg = msg.b;
+			case 'WholePageRJTMsg':
+				var rjtMsg = msg.a;
 				var _v9 = model.currentDoc;
 				if (_v9.$ === 'Just') {
 					var doc = _v9.a;
-					var _v10 = A2($elm$core$Dict$get, itemId, doc.contents);
-					if ((_v10.$ === 'Just') && (_v10.a.$ === 'ZTJRichJapText')) {
-						var rjt = _v10.a.a;
+					var newContents = $elm$core$Dict$fromList(
+						A2(
+							$elm$core$List$indexedMap,
+							$elm$core$Tuple$pair,
+							A3(
+								$elm$core$List$foldr,
+								F2(
+									function (i, acc) {
+										if (i.$ === 'ZTJRichJapText') {
+											var rjt = i.a;
+											return A2(
+												$elm$core$List$cons,
+												$author$project$Types$ZTJRichJapText(
+													A2($author$project$ZtjGrpPratique$rjtUpdate, rjt, rjtMsg)),
+												acc);
+										} else {
+											return A2($elm$core$List$cons, i, acc);
+										}
+									}),
+								_List_Nil,
+								$elm$core$Dict$values(doc.contents))));
+					var newDoc = _Utils_update(
+						doc,
+						{contents: newContents});
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								currentDoc: $elm$core$Maybe$Just(newDoc)
+							}),
+						$elm$core$Platform$Cmd$none);
+				} else {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
+			case 'RJTWrapper':
+				var itemId = msg.a;
+				var rjtMsg = msg.b;
+				var _v11 = model.currentDoc;
+				if (_v11.$ === 'Just') {
+					var doc = _v11.a;
+					var _v12 = A2($elm$core$Dict$get, itemId, doc.contents);
+					if ((_v12.$ === 'Just') && (_v12.a.$ === 'ZTJRichJapText')) {
+						var rjt = _v12.a.a;
 						var newRjt = $author$project$Types$ZTJRichJapText(
 							A2($author$project$ZtjGrpPratique$rjtUpdate, rjt, rjtMsg));
 						var newDoc = _Utils_update(
@@ -8429,12 +8522,12 @@ var $author$project$ZtjGrpPratique$update = F2(
 					$elm$core$Platform$Cmd$none);
 			case 'ZGPAddRichJapText':
 				var toTop = msg.a;
-				var _v11 = A2(
+				var _v13 = A2(
 					$elm$core$Maybe$map,
 					$elm$json$Json$Decode$decodeString($author$project$ZtjGrpPratique$rjtDecoder),
 					model.rjtInput);
-				if ((_v11.$ === 'Just') && (_v11.a.$ === 'Ok')) {
-					var rjt = _v11.a.a;
+				if ((_v13.$ === 'Just') && (_v13.a.$ === 'Ok')) {
+					var rjt = _v13.a.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -8471,11 +8564,11 @@ var $author$project$ZtjGrpPratique$update = F2(
 					model.selectedDocItem,
 					$elm$core$Maybe$Just(i)) ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(i);
 				var newModel = function () {
-					var _v12 = A2($author$project$ZtjGrpPratique$getItemAt, model, i);
-					if (_v12.$ === 'Just') {
-						switch (_v12.a.$) {
+					var _v14 = A2($author$project$ZtjGrpPratique$getItemAt, model, i);
+					if (_v14.$ === 'Just') {
+						switch (_v14.a.$) {
 							case 'ZTJMarkdown':
-								var md = _v12.a.a;
+								var md = _v14.a.a;
 								return _Utils_update(
 									model,
 									{
@@ -8483,9 +8576,9 @@ var $author$project$ZtjGrpPratique$update = F2(
 										selectedDocItem: newSelected
 									});
 							case 'ZTJCollapsableMarkdown':
-								var _v13 = _v12.a;
-								var title = _v13.a;
-								var content = _v13.b;
+								var _v15 = _v14.a;
+								var title = _v15.a;
+								var content = _v15.b;
 								return _Utils_update(
 									model,
 									{
@@ -8493,7 +8586,7 @@ var $author$project$ZtjGrpPratique$update = F2(
 										selectedDocItem: newSelected
 									});
 							case 'ZGPAudio':
-								var url = _v12.a.a;
+								var url = _v14.a.a;
 								return _Utils_update(
 									model,
 									{
@@ -8501,7 +8594,7 @@ var $author$project$ZtjGrpPratique$update = F2(
 										selectedDocItem: newSelected
 									});
 							default:
-								var rjt = _v12.a.a;
+								var rjt = _v14.a.a;
 								return _Utils_update(
 									model,
 									{
@@ -8520,18 +8613,18 @@ var $author$project$ZtjGrpPratique$update = F2(
 			case 'ZGPSwapItem':
 				var i = msg.a;
 				var j = msg.b;
-				var _v14 = model.currentDoc;
-				if (_v14.$ === 'Just') {
-					var doc = _v14.a;
+				var _v16 = model.currentDoc;
+				if (_v16.$ === 'Just') {
+					var doc = _v16.a;
 					var newDoc = _Utils_update(
 						doc,
 						{
 							contents: function () {
-								var _v15 = _Utils_Tuple2(
+								var _v17 = _Utils_Tuple2(
 									$elm$core$Dict$keys(doc.contents),
 									$elm$core$Dict$values(doc.contents));
-								var keys = _v15.a;
-								var values = _v15.b;
+								var keys = _v17.a;
+								var values = _v17.b;
 								return $elm$core$Dict$fromList(
 									A3(
 										$elm$core$List$map2,
@@ -8552,9 +8645,9 @@ var $author$project$ZtjGrpPratique$update = F2(
 				}
 			case 'ZGPRemoveItem':
 				var i = msg.a;
-				var _v16 = model.currentDoc;
-				if (_v16.$ === 'Just') {
-					var doc = _v16.a;
+				var _v18 = model.currentDoc;
+				if (_v18.$ === 'Just') {
+					var doc = _v18.a;
 					var newDoc = _Utils_update(
 						doc,
 						{
@@ -8600,9 +8693,9 @@ var $author$project$ZtjGrpPratique$update = F2(
 					$elm$core$Platform$Cmd$none);
 			case 'ZGPDocLoaded':
 				var docStr = msg.a;
-				var _v17 = A2($miniBill$elm_codec$Codec$decodeString, $author$project$ZtjGrpPratique$ztjDocCodec, docStr);
-				if (_v17.$ === 'Ok') {
-					var doc = _v17.a;
+				var _v19 = A2($miniBill$elm_codec$Codec$decodeString, $author$project$ZtjGrpPratique$ztjDocCodec, docStr);
+				if (_v19.$ === 'Ok') {
+					var doc = _v19.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -8619,9 +8712,9 @@ var $author$project$ZtjGrpPratique$update = F2(
 						$elm$core$Platform$Cmd$none);
 				}
 			case 'ZGPToggleCollapsable':
-				var _v18 = msg.a;
-				var title = _v18.a;
-				var id = _v18.b;
+				var _v20 = msg.a;
+				var title = _v20.a;
+				var id = _v20.b;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -8643,10 +8736,36 @@ var $author$project$ZtjGrpPratique$update = F2(
 				return _Utils_Tuple2(
 					model,
 					$author$project$ZtjGrpPratique$copyToClipboard(data));
+			case 'ToggleWholePageControl':
+				var b = msg.a;
+				var _v21 = model.currentDoc;
+				if (_v21.$ === 'Just') {
+					var doc = _v21.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								currentDoc: $elm$core$Maybe$Just(
+									_Utils_update(
+										doc,
+										{
+											wholePageControls: $elm$core$Maybe$Just(b)
+										}))
+							}),
+						$elm$core$Platform$Cmd$none);
+				} else {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
 			default:
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 		}
 	});
+var $author$project$Types$ToggleWholePageControl = function (a) {
+	return {$: 'ToggleWholePageControl', a: a};
+};
+var $author$project$Types$WholePageRJTMsg = function (a) {
+	return {$: 'WholePageRJTMsg', a: a};
+};
 var $author$project$Types$ZGPAddAudio = function (a) {
 	return {$: 'ZGPAddAudio', a: a};
 };
@@ -14520,117 +14639,12 @@ var $author$project$Style$Helpers$buttonStyle_ = function (isActive) {
 };
 var $mdgriffith$elm_ui$Internal$Model$CenterX = {$: 'CenterX'};
 var $mdgriffith$elm_ui$Element$centerX = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$CenterX);
-var $mdgriffith$elm_ui$Internal$Model$AsColumn = {$: 'AsColumn'};
-var $mdgriffith$elm_ui$Internal$Model$asColumn = $mdgriffith$elm_ui$Internal$Model$AsColumn;
-var $mdgriffith$elm_ui$Element$column = F2(
-	function (attrs, children) {
-		return A4(
-			$mdgriffith$elm_ui$Internal$Model$element,
-			$mdgriffith$elm_ui$Internal$Model$asColumn,
-			$mdgriffith$elm_ui$Internal$Model$div,
-			A2(
-				$elm$core$List$cons,
-				$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.contentTop + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.contentLeft)),
-				A2(
-					$elm$core$List$cons,
-					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$shrink),
-					A2(
-						$elm$core$List$cons,
-						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$shrink),
-						attrs))),
-			$mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
-	});
-var $elm$html$Html$Attributes$download = function (fileName) {
-	return A2($elm$html$Html$Attributes$stringProperty, 'download', fileName);
-};
-var $mdgriffith$elm_ui$Element$Keyed$column = F2(
-	function (attrs, children) {
-		return A4(
-			$mdgriffith$elm_ui$Internal$Model$element,
-			$mdgriffith$elm_ui$Internal$Model$asColumn,
-			$mdgriffith$elm_ui$Internal$Model$div,
-			A2(
-				$elm$core$List$cons,
-				$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.contentTop + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.contentLeft)),
-				A2(
-					$elm$core$List$cons,
-					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$shrink),
-					A2(
-						$elm$core$List$cons,
-						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$shrink),
-						attrs))),
-			$mdgriffith$elm_ui$Internal$Model$Keyed(children));
-	});
-var $author$project$Types$ZGPRemoveItem = function (a) {
-	return {$: 'ZGPRemoveItem', a: a};
-};
-var $author$project$Types$ZGPSelectItem = function (a) {
-	return {$: 'ZGPSelectItem', a: a};
-};
-var $author$project$Types$ZGPSwapItem = F2(
-	function (a, b) {
-		return {$: 'ZGPSwapItem', a: a, b: b};
-	});
-var $mdgriffith$elm_ui$Internal$Model$Top = {$: 'Top'};
-var $mdgriffith$elm_ui$Element$alignTop = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$Top);
-var $author$project$Types$RJTWrapper = F2(
-	function (a, b) {
-		return {$: 'RJTWrapper', a: a, b: b};
-	});
-var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
-var $elm$html$Html$audio = _VirtualDom_node('audio');
-var $author$project$Types$ZGPToggleCollapsable = function (a) {
-	return {$: 'ZGPToggleCollapsable', a: a};
-};
-var $mdgriffith$elm_ui$Element$el = F2(
-	function (attrs, child) {
-		return A4(
-			$mdgriffith$elm_ui$Internal$Model$element,
-			$mdgriffith$elm_ui$Internal$Model$asEl,
-			$mdgriffith$elm_ui$Internal$Model$div,
-			A2(
-				$elm$core$List$cons,
-				$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$shrink),
-				A2(
-					$elm$core$List$cons,
-					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$shrink),
-					attrs)),
-			$mdgriffith$elm_ui$Internal$Model$Unkeyed(
-				_List_fromArray(
-					[child])));
-	});
-var $mdgriffith$elm_ui$Element$text = function (content) {
-	return $mdgriffith$elm_ui$Internal$Model$Text(content);
-};
-var $author$project$ZtjGrpPratique$collapseArrowView = F3(
-	function (title, id, isCollapsed) {
-		return A2(
-			$mdgriffith$elm_ui$Element$el,
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$pointer,
-					$mdgriffith$elm_ui$Element$Events$onClick(
-					$author$project$Types$ZGPToggleCollapsable(
-						_Utils_Tuple2(title, id)))
-				]),
-			isCollapsed ? $mdgriffith$elm_ui$Element$text('➡️') : $mdgriffith$elm_ui$Element$text('🔽'));
-	});
-var $author$project$Types$RJTSetDisplay = F2(
-	function (a, b) {
-		return {$: 'RJTSetDisplay', a: a, b: b};
-	});
-var $author$project$Types$RJTToggleAllTranslation = {$: 'RJTToggleAllTranslation'};
-var $elm$core$List$all = F2(
-	function (isOkay, list) {
-		return !A2(
-			$elm$core$List$any,
-			A2($elm$core$Basics$composeL, $elm$core$Basics$not, isOkay),
-			list);
-	});
 var $mdgriffith$elm_ui$Internal$Model$Left = {$: 'Left'};
 var $mdgriffith$elm_ui$Element$alignLeft = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Left);
 var $mdgriffith$elm_ui$Internal$Model$LivePolite = {$: 'LivePolite'};
 var $mdgriffith$elm_ui$Element$Region$announce = $mdgriffith$elm_ui$Internal$Model$Describe($mdgriffith$elm_ui$Internal$Model$LivePolite);
+var $mdgriffith$elm_ui$Internal$Model$AsColumn = {$: 'AsColumn'};
+var $mdgriffith$elm_ui$Internal$Model$asColumn = $mdgriffith$elm_ui$Internal$Model$AsColumn;
 var $mdgriffith$elm_ui$Internal$Model$AsRow = {$: 'AsRow'};
 var $mdgriffith$elm_ui$Internal$Model$asRow = $mdgriffith$elm_ui$Internal$Model$AsRow;
 var $mdgriffith$elm_ui$Element$Input$applyLabel = F3(
@@ -14709,6 +14723,7 @@ var $mdgriffith$elm_ui$Element$Input$applyLabel = F3(
 			}
 		}
 	});
+var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
 var $mdgriffith$elm_ui$Internal$Model$Fill = function (a) {
 	return {$: 'Fill', a: a};
 };
@@ -14812,10 +14827,57 @@ var $mdgriffith$elm_ui$Element$Input$checkbox = F2(
 							icon(checked)
 						]))));
 	});
+var $mdgriffith$elm_ui$Element$column = F2(
+	function (attrs, children) {
+		return A4(
+			$mdgriffith$elm_ui$Internal$Model$element,
+			$mdgriffith$elm_ui$Internal$Model$asColumn,
+			$mdgriffith$elm_ui$Internal$Model$div,
+			A2(
+				$elm$core$List$cons,
+				$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.contentTop + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.contentLeft)),
+				A2(
+					$elm$core$List$cons,
+					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$shrink),
+					A2(
+						$elm$core$List$cons,
+						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$shrink),
+						attrs))),
+			$mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
+	});
+var $author$project$Types$RJTSetDisplay = F2(
+	function (a, b) {
+		return {$: 'RJTSetDisplay', a: a, b: b};
+	});
+var $author$project$Types$RJTToggleAllTranslation = {$: 'RJTToggleAllTranslation'};
+var $elm$core$List$all = F2(
+	function (isOkay, list) {
+		return !A2(
+			$elm$core$List$any,
+			A2($elm$core$Basics$composeL, $elm$core$Basics$not, isOkay),
+			list);
+	});
 var $elm$core$Basics$pi = _Basics_pi;
 var $elm$core$Basics$degrees = function (angleInDegrees) {
 	return (angleInDegrees * $elm$core$Basics$pi) / 180;
 };
+var $mdgriffith$elm_ui$Element$el = F2(
+	function (attrs, child) {
+		return A4(
+			$mdgriffith$elm_ui$Internal$Model$element,
+			$mdgriffith$elm_ui$Internal$Model$asEl,
+			$mdgriffith$elm_ui$Internal$Model$div,
+			A2(
+				$elm$core$List$cons,
+				$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$shrink),
+				A2(
+					$elm$core$List$cons,
+					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$shrink),
+					attrs)),
+			$mdgriffith$elm_ui$Internal$Model$Unkeyed(
+				_List_fromArray(
+					[child])));
+	});
 var $mdgriffith$elm_ui$Internal$Model$InFront = {$: 'InFront'};
 var $mdgriffith$elm_ui$Element$createNearby = F2(
 	function (loc, element) {
@@ -15464,6 +15526,9 @@ var $mdgriffith$elm_ui$Element$Input$radioHelper = F3(
 var $mdgriffith$elm_ui$Element$Input$radio = $mdgriffith$elm_ui$Element$Input$radioHelper($mdgriffith$elm_ui$Element$Input$Column);
 var $mdgriffith$elm_ui$Element$Input$Row = {$: 'Row'};
 var $mdgriffith$elm_ui$Element$Input$radioRow = $mdgriffith$elm_ui$Element$Input$radioHelper($mdgriffith$elm_ui$Element$Input$Row);
+var $mdgriffith$elm_ui$Element$text = function (content) {
+	return $mdgriffith$elm_ui$Internal$Model$Text(content);
+};
 var $mdgriffith$elm_ui$Internal$Model$Padding = F5(
 	function (a, b, c, d, e) {
 		return {$: 'Padding', a: a, b: b, c: c, d: d, e: e};
@@ -15652,8 +15717,8 @@ var $mdgriffith$elm_ui$Element$wrappedRow = F2(
 			}
 		}
 	});
-var $author$project$ZtjGrpPratique$controls = F2(
-	function (w, rjt) {
+var $author$project$ZtjGrpPratique$controls = F3(
+	function (hideControls, w, rjt) {
 		var noFrenchSet = A2(
 			$elm$core$List$all,
 			function (s) {
@@ -15676,7 +15741,7 @@ var $author$project$ZtjGrpPratique$controls = F2(
 					return $.display;
 				},
 				rjt.sentences));
-		return A2(
+		return hideControls ? $mdgriffith$elm_ui$Element$none : A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
 				[
@@ -15781,6 +15846,60 @@ var $author$project$ZtjGrpPratique$controls = F2(
 								}))
 						]))
 				]));
+	});
+var $elm$html$Html$Attributes$download = function (fileName) {
+	return A2($elm$html$Html$Attributes$stringProperty, 'download', fileName);
+};
+var $mdgriffith$elm_ui$Element$Keyed$column = F2(
+	function (attrs, children) {
+		return A4(
+			$mdgriffith$elm_ui$Internal$Model$element,
+			$mdgriffith$elm_ui$Internal$Model$asColumn,
+			$mdgriffith$elm_ui$Internal$Model$div,
+			A2(
+				$elm$core$List$cons,
+				$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.contentTop + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.contentLeft)),
+				A2(
+					$elm$core$List$cons,
+					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$shrink),
+					A2(
+						$elm$core$List$cons,
+						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$shrink),
+						attrs))),
+			$mdgriffith$elm_ui$Internal$Model$Keyed(children));
+	});
+var $author$project$Types$ZGPRemoveItem = function (a) {
+	return {$: 'ZGPRemoveItem', a: a};
+};
+var $author$project$Types$ZGPSelectItem = function (a) {
+	return {$: 'ZGPSelectItem', a: a};
+};
+var $author$project$Types$ZGPSwapItem = F2(
+	function (a, b) {
+		return {$: 'ZGPSwapItem', a: a, b: b};
+	});
+var $mdgriffith$elm_ui$Internal$Model$Top = {$: 'Top'};
+var $mdgriffith$elm_ui$Element$alignTop = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$Top);
+var $author$project$Types$RJTWrapper = F2(
+	function (a, b) {
+		return {$: 'RJTWrapper', a: a, b: b};
+	});
+var $elm$html$Html$audio = _VirtualDom_node('audio');
+var $author$project$Types$ZGPToggleCollapsable = function (a) {
+	return {$: 'ZGPToggleCollapsable', a: a};
+};
+var $author$project$ZtjGrpPratique$collapseArrowView = F3(
+	function (title, id, isCollapsed) {
+		return A2(
+			$mdgriffith$elm_ui$Element$el,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$pointer,
+					$mdgriffith$elm_ui$Element$Events$onClick(
+					$author$project$Types$ZGPToggleCollapsable(
+						_Utils_Tuple2(title, id)))
+				]),
+			isCollapsed ? $mdgriffith$elm_ui$Element$text('➡️') : $mdgriffith$elm_ui$Element$text('🔽'));
 	});
 var $mdgriffith$elm_ui$Internal$Model$unstyled = A2($elm$core$Basics$composeL, $mdgriffith$elm_ui$Internal$Model$Unstyled, $elm$core$Basics$always);
 var $mdgriffith$elm_ui$Element$html = $mdgriffith$elm_ui$Internal$Model$unstyled;
@@ -20598,8 +20717,8 @@ var $author$project$ZtjGrpPratique$simpleMarkdownView = function (wd) {
 			]));
 };
 var $elm$html$Html$source = _VirtualDom_node('source');
-var $author$project$ZtjGrpPratique$documentContentView = F5(
-	function (w, fs, collapsed, itemId, docItem) {
+var $author$project$ZtjGrpPratique$documentContentView = F6(
+	function (hideControls, w, fs, collapsed, itemId, docItem) {
 		switch (docItem.$) {
 			case 'ZTJMarkdown':
 				var markdown = docItem.a;
@@ -20681,7 +20800,7 @@ var $author$project$ZtjGrpPratique$documentContentView = F5(
 							]),
 						_List_fromArray(
 							[
-								A2($author$project$ZtjGrpPratique$controls, w, rjt),
+								A3($author$project$ZtjGrpPratique$controls, hideControls, w, rjt),
 								A2(
 								$mdgriffith$elm_ui$Element$column,
 								_List_fromArray(
@@ -20706,13 +20825,14 @@ var $avh4$elm_color$Color$lightBlue = A4($avh4$elm_color$Color$RgbaSpace, 114 / 
 var $author$project$Style$Palette$lightBlue = $author$project$Style$Palette$colorConv($avh4$elm_color$Color$lightBlue);
 var $author$project$Style$Helpers$noAttr = $mdgriffith$elm_ui$Element$htmlAttribute(
 	$elm$html$Html$Attributes$class(''));
-var $author$project$ZtjGrpPratique$documentEditableContentView = F6(
-	function (w, fs, collapsed, selectedId, itemId, docItem) {
+var $author$project$ZtjGrpPratique$documentEditableContentView = F7(
+	function (hideControls, w, fs, collapsed, selectedId, itemId, docItem) {
 		return A2(
 			$mdgriffith$elm_ui$Element$row,
 			_List_fromArray(
 				[
 					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+					A2($mdgriffith$elm_ui$Element$paddingXY, 0, 7),
 					$mdgriffith$elm_ui$Element$spacing(5),
 					$mdgriffith$elm_ui$Element$Border$width(2),
 					_Utils_eq(
@@ -20764,13 +20884,14 @@ var $author$project$ZtjGrpPratique$documentEditableContentView = F6(
 									$author$project$Types$ZGPRemoveItem(itemId))
 							})
 						])),
-					A5($author$project$ZtjGrpPratique$documentContentView, w, fs, collapsed, itemId, docItem)
+					A6($author$project$ZtjGrpPratique$documentContentView, hideControls, w, fs, collapsed, itemId, docItem)
 				]));
 	});
 var $author$project$ZtjGrpPratique$editableDocView = F4(
 	function (w, collapsed, selectedId, _v0) {
 		var level = _v0.level;
 		var contents = _v0.contents;
+		var wholePageControls = _v0.wholePageControls;
 		return A2(
 			$mdgriffith$elm_ui$Element$Keyed$column,
 			_List_fromArray(
@@ -20785,7 +20906,15 @@ var $author$project$ZtjGrpPratique$editableDocView = F4(
 				$elm$core$Dict$toList(
 					A2(
 						$elm$core$Dict$map,
-						A4($author$project$ZtjGrpPratique$documentEditableContentView, w, 18, collapsed, selectedId),
+						A5(
+							$author$project$ZtjGrpPratique$documentEditableContentView,
+							_Utils_eq(
+								wholePageControls,
+								$elm$core$Maybe$Just(true)),
+							w,
+							18,
+							collapsed,
+							selectedId),
 						contents))));
 	});
 var $truqu$elm_base64$Base64$Encode$intToBase64 = function (i) {
@@ -20992,6 +21121,8 @@ var $truqu$elm_base64$Base64$Encode$encode = function (input) {
 var $truqu$elm_base64$Base64$encode = $truqu$elm_base64$Base64$Encode$encode;
 var $mdgriffith$elm_ui$Element$Input$Above = {$: 'Above'};
 var $mdgriffith$elm_ui$Element$Input$labelAbove = $mdgriffith$elm_ui$Element$Input$Label($mdgriffith$elm_ui$Element$Input$Above);
+var $mdgriffith$elm_ui$Element$Input$OnLeft = {$: 'OnLeft'};
+var $mdgriffith$elm_ui$Element$Input$labelLeft = $mdgriffith$elm_ui$Element$Input$Label($mdgriffith$elm_ui$Element$Input$OnLeft);
 var $mdgriffith$elm_ui$Internal$Model$Min = F2(
 	function (a, b) {
 		return {$: 'Min', a: a, b: b};
@@ -21988,6 +22119,45 @@ var $author$project$Style$Helpers$textInputStyle = _List_fromArray(
 			]))
 	]);
 var $author$project$ZtjGrpPratique$adminView = function (model) {
+	var wpc = function () {
+		var _v0 = model.currentDoc;
+		if (_v0.$ === 'Just') {
+			var contents = _v0.a.contents;
+			var wholePageControls = _v0.a.wholePageControls;
+			if (_Utils_eq(
+				wholePageControls,
+				$elm$core$Maybe$Just(true))) {
+				var everysentences = A3(
+					$elm$core$List$foldr,
+					F2(
+						function (i, acc) {
+							if (i.$ === 'ZTJRichJapText') {
+								var rjt = i.a;
+								return _Utils_ap(rjt.sentences, acc);
+							} else {
+								return acc;
+							}
+						}),
+					_List_Nil,
+					$elm$core$Dict$values(contents));
+				return A2(
+					$mdgriffith$elm_ui$Element$map,
+					$author$project$Types$WholePageRJTMsg,
+					A3(
+						$author$project$ZtjGrpPratique$controls,
+						false,
+						A2(
+							$elm$core$Basics$max,
+							400,
+							A2($elm$core$Basics$min, 800, model.width)),
+						{sentences: everysentences}));
+			} else {
+				return $mdgriffith$elm_ui$Element$none;
+			}
+		} else {
+			return $mdgriffith$elm_ui$Element$none;
+		}
+	}();
 	var title = A2(
 		$elm$core$Maybe$withDefault,
 		'',
@@ -22127,6 +22297,28 @@ var $author$project$ZtjGrpPratique$adminView = function (model) {
 				_List_fromArray(
 					[
 						A2(
+						$mdgriffith$elm_ui$Element$Input$checkbox,
+						_List_Nil,
+						{
+							checked: A2(
+								$elm$core$Maybe$withDefault,
+								false,
+								A2(
+									$elm$core$Maybe$map,
+									function (d) {
+										return _Utils_eq(
+											d.wholePageControls,
+											$elm$core$Maybe$Just(true));
+									},
+									model.currentDoc)),
+							icon: $mdgriffith$elm_ui$Element$Input$defaultCheckbox,
+							label: A2(
+								$mdgriffith$elm_ui$Element$Input$labelLeft,
+								_List_Nil,
+								$mdgriffith$elm_ui$Element$text('Whole page controls')),
+							onChange: $author$project$Types$ToggleWholePageControl
+						}),
+						A2(
 						$mdgriffith$elm_ui$Element$Input$multiline,
 						_List_fromArray(
 							[
@@ -22262,6 +22454,7 @@ var $author$project$ZtjGrpPratique$adminView = function (model) {
 					]),
 				_List_fromArray(
 					[
+						wpc,
 						A2(
 						$elm$core$Maybe$withDefault,
 						$mdgriffith$elm_ui$Element$none,
@@ -22591,7 +22784,37 @@ var $author$project$ZtjGrpPratique$documentView = F4(
 	function (w, fs, collapsed, _v0) {
 		var level = _v0.level;
 		var contents = _v0.contents;
+		var wholePageControls = _v0.wholePageControls;
 		var p = (w < 1000) ? 10 : 0;
+		var wpc = function () {
+			if (_Utils_eq(
+				wholePageControls,
+				$elm$core$Maybe$Just(true))) {
+				var everysentences = A3(
+					$elm$core$List$foldr,
+					F2(
+						function (i, acc) {
+							if (i.$ === 'ZTJRichJapText') {
+								var rjt = i.a;
+								return _Utils_ap(rjt.sentences, acc);
+							} else {
+								return acc;
+							}
+						}),
+					_List_Nil,
+					$elm$core$Dict$values(contents));
+				return A2(
+					$mdgriffith$elm_ui$Element$map,
+					$author$project$Types$WholePageRJTMsg,
+					A3(
+						$author$project$ZtjGrpPratique$controls,
+						false,
+						p,
+						{sentences: everysentences}));
+			} else {
+				return $mdgriffith$elm_ui$Element$none;
+			}
+		}();
 		return A2(
 			$mdgriffith$elm_ui$Element$Keyed$column,
 			_List_fromArray(
@@ -22601,20 +22824,33 @@ var $author$project$ZtjGrpPratique$documentView = F4(
 					$mdgriffith$elm_ui$Element$width(
 					$mdgriffith$elm_ui$Element$px(w - (2 * p)))
 				]),
-			A2(
-				$elm$core$List$map,
-				function (_v1) {
-					var hash = _v1.a;
-					var index = _v1.b;
-					var item = _v1.c;
-					return _Utils_Tuple2(
-						hash,
-						A5($author$project$ZtjGrpPratique$documentContentView, w - (2 * p), fs, collapsed, index, item));
-				},
+			(_Utils_eq(
+				wholePageControls,
+				$elm$core$Maybe$Just(true)) ? $elm$core$List$cons(
+				_Utils_Tuple2('wholePageControls', wpc)) : $elm$core$Basics$identity)(
 				A2(
 					$elm$core$List$map,
-					$author$project$ZtjGrpPratique$uniqueItemKey,
-					$elm$core$Dict$toList(contents))));
+					function (_v1) {
+						var hash = _v1.a;
+						var index = _v1.b;
+						var item = _v1.c;
+						return _Utils_Tuple2(
+							hash,
+							A6(
+								$author$project$ZtjGrpPratique$documentContentView,
+								_Utils_eq(
+									wholePageControls,
+									$elm$core$Maybe$Just(true)),
+								w - (2 * p),
+								fs,
+								collapsed,
+								index,
+								item));
+					},
+					A2(
+						$elm$core$List$map,
+						$author$project$ZtjGrpPratique$uniqueItemKey,
+						$elm$core$Dict$toList(contents)))));
 	});
 var $mdgriffith$elm_ui$Element$Font$bold = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.bold);
 var $hecrj$html_parser$Html$Parser$Element = F3(
