@@ -15745,7 +15745,8 @@ var $author$project$ZtjGrpPratique$controls = F3(
 			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
 				[
-					$mdgriffith$elm_ui$Element$spacing(5)
+					$mdgriffith$elm_ui$Element$spacing(5),
+					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
 				]),
 			_List_fromArray(
 				[
@@ -15755,7 +15756,8 @@ var $author$project$ZtjGrpPratique$controls = F3(
 						[
 							$mdgriffith$elm_ui$Element$spacing(15),
 							A2($mdgriffith$elm_ui$Element$paddingXY, 10, 10),
-							$mdgriffith$elm_ui$Element$Font$size(16)
+							$mdgriffith$elm_ui$Element$Font$size(16),
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
 						]),
 					{
 						label: $mdgriffith$elm_ui$Element$Input$labelHidden(''),
@@ -21985,7 +21987,8 @@ var $author$project$ZtjGrpPratique$selectionView = function (model) {
 		$mdgriffith$elm_ui$Element$wrappedRow,
 		_List_fromArray(
 			[
-				$mdgriffith$elm_ui$Element$spacing(20)
+				$mdgriffith$elm_ui$Element$spacing(20),
+				$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
 			]),
 		_List_fromArray(
 			[
@@ -22809,7 +22812,7 @@ var $author$project$ZtjGrpPratique$documentView = F4(
 					A3(
 						$author$project$ZtjGrpPratique$controls,
 						false,
-						p,
+						w - (2 * p),
 						{sentences: everysentences}));
 			} else {
 				return $mdgriffith$elm_ui$Element$none;
@@ -22833,7 +22836,8 @@ var $author$project$ZtjGrpPratique$documentView = F4(
 						$mdgriffith$elm_ui$Element$el,
 						_List_fromArray(
 							[
-								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+								$mdgriffith$elm_ui$Element$width(
+								$mdgriffith$elm_ui$Element$px(w - (2 * p)))
 							]),
 						wpc))) : $elm$core$Basics$identity)(
 				A2(
