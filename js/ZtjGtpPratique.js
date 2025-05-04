@@ -22827,7 +22827,15 @@ var $author$project$ZtjGrpPratique$documentView = F4(
 			(_Utils_eq(
 				wholePageControls,
 				$elm$core$Maybe$Just(true)) ? $elm$core$List$cons(
-				_Utils_Tuple2('wholePageControls', wpc)) : $elm$core$Basics$identity)(
+				_Utils_Tuple2(
+					'wholePageControls',
+					A2(
+						$mdgriffith$elm_ui$Element$el,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+							]),
+						wpc))) : $elm$core$Basics$identity)(
 				A2(
 					$elm$core$List$map,
 					function (_v1) {
