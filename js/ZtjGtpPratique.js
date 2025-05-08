@@ -16463,15 +16463,26 @@ var $author$project$Markdown$JapPreprocessor$htmlRubies = function () {
 					$elm$parser$Parser$backtrackable(
 					A2(
 						$elm$parser$Parser$keeper,
-						$elm$parser$Parser$succeed(
-							function (jStr) {
-								return $elm$parser$Parser$Loop(
-									_Utils_ap(
-										_List_fromArray(
-											[jStr]),
-										jStrs));
-							}),
-						A2($elm$parser$Parser$ignorer, $author$project$Markdown$JapPreprocessor$htmlRuby, $author$project$Utils$Utils$customSpaces))),
+						A2(
+							$elm$parser$Parser$keeper,
+							A2(
+								$elm$parser$Parser$keeper,
+								$elm$parser$Parser$succeed(
+									F3(
+										function (s1, jStr, s2) {
+											return $elm$parser$Parser$Loop(
+												_Utils_ap(
+													_List_fromArray(
+														[
+															$author$project$Types$Plain(s1),
+															jStr,
+															$author$project$Types$Plain(s2)
+														]),
+													jStrs));
+										})),
+								$author$project$Utils$Utils$customSpaces),
+							$author$project$Markdown$JapPreprocessor$htmlRuby),
+						$author$project$Utils$Utils$customSpaces)),
 					$elm$parser$Parser$backtrackable(
 					A2(
 						$elm$parser$Parser$keeper,
