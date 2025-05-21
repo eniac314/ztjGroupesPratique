@@ -25,6 +25,6 @@ Dialogue - Les vacances d’été approchent
 Dialogue - Un voyage inoubliable au Japon
 Parler de ses goûts alimentaires
 Dialogue - Controle des passeports a l’aeroport
-
+Shichi-go-san - Les fêtes des enfants
 
 
